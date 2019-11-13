@@ -68,9 +68,6 @@ This creates a WAR file inside the `target` directory.
     </application> 
     ```
 
-    Note: if you use the Gradle build, the WAR is named `com.ibm.cics.spring.jee.security-1.0.0.war
-
-    Note: This project is built as a deployable WAR file so  `<springBootApplication>` or `<application type="spring">` must not be used.
     
 ## Trying out the sample
 
