@@ -2,7 +2,7 @@
 
 This sample project demonstrates how you can write a Spring Boot application to integrate with IBM CICS transactions when you deploy it to a Liberty JVM server.  The application uses a web browser front end, the web request then uses Java™ Transaction API (JTA) to manage a simple CICS write to a CICS TSQ using a UserTransaction context.
 
-Java™ Transaction API (JTA) is descrbed in the [Spring security documentation](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.4.0/applications/developing/java/dfhpj2_jta.html)
+Java™ Transaction API (JTA) is descrbed in the [IBM Java™ Transaction API (JTA](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.4.0/applications/developing/java/dfhpj2_jta.html)
 
 For more information, see blog post - link TBC.
 
@@ -12,6 +12,7 @@ For more information, see blog post - link TBC.
   - A configured Liberty JVM server 
   - Java SE 1.8 or later on the z/OS system
   - Java SE 1.8 or later on the workstation
+  - A TSModel with Recovery ON for TSQ EXAMPLE
 
 ## Building 
 
