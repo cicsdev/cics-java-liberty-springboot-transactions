@@ -54,9 +54,8 @@ This creates a WAR file inside the `target` directory.
 
 1. Transfer the WAR file to zFS for example using FTP. 
 
-2. Ensure you have the following features in `server.xml`:
+2. Ensure you have the following feature in `server.xml`:
 
-    - springBoot-2.0
     - servlet-3.1
     
 3. Add the app configuration to `server.xml`
