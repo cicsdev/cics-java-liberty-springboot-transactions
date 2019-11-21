@@ -13,7 +13,7 @@ public class Servlet {
 	public String index() {
 
 		tran.exampleCommit();
-		return "Greetings from com.ibm.cics.springboot.transaction servlet";
+		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet";
 		
 	}
 	
@@ -21,7 +21,7 @@ public class Servlet {
 	public String rollback() {
 
 		tran.exampleCommitAndRollback();
-		return "Greetings from com.ibm.cics.springboot.transaction servlet rollback";
+		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet rollback";
 	}
 
 }
