@@ -2,6 +2,7 @@ package com.ibm.cics.springboot.transactions;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.ibm.cics.server.TSQ;
 
 @Component
+@Transactional
 public class Transactions {
 	
 	public void exampleCommit() {
