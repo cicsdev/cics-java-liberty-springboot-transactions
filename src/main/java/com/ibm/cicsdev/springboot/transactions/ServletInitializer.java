@@ -1,4 +1,4 @@
-package com.ibm.cics.springboot.transactions;
+package com.ibm.cicsdev.springboot.transactions;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

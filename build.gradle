@@ -17,7 +17,7 @@ apply plugin: 'war'
 war 
 {
    enabled = true
-   baseName = 'com.ibm.cics.springboot.transactions'
+   baseName = 'com.ibm.cicsdev.springboot.transactions'
    version = '1.0.0'
 }
 

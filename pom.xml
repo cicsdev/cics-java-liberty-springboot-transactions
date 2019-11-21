@@ -8,11 +8,11 @@
 		<version>2.2.2.BUILD-SNAPSHOT</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.ibm.cics.springboot.transactions</groupId>
-	<artifactId>com.ibm.cics.springboot.transactions</artifactId>
+	<groupId>com.ibm.cicsdev.springboot.transactions</groupId>
+	<artifactId>com.ibm.cicsdev.springboot.transactions</artifactId>
 	<version>1.0.0</version>
 	<packaging>war</packaging>
-	<name>com.ibm.cics.springboot.transactions</name>
+	<name>com.ibm.cicsdev.springboot.transactions</name>
 	<description>Demo project for Spring and Liberty Tranasactions</description>
 
 	<properties>
