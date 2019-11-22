@@ -19,6 +19,18 @@
 		<java.version>1.8</java.version>
 	</properties>
 
+	<dependencyManagement>
+	  <dependencies>
+	    <dependency>
+	      <groupId>com.ibm.cics</groupId>
+	      <artifactId>com.ibm.cics.ts.bom</artifactId>
+	      <version>5.5-20191121085445-PH14856</version>
+	      <type>pom</type>
+	      <scope>import</scope>
+	     </dependency>
+	  </dependencies>
+    </dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -37,10 +49,8 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		   <groupId>com.ibm.cics</groupId>
-		   <artifactId>com.ibm.cics.server</artifactId>
-		   <version>1.700.0-5.5-PH10453</version>
-		   <scope>provided</scope>
+		    <groupId>com.ibm.cics</groupId>
+		    <artifactId>com.ibm.cics.server</artifactId>
 		</dependency>
 		<dependency>
 		    <groupId>javax.transaction</groupId>

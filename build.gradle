@@ -38,7 +38,9 @@ dependencies {
     // Don't include TomCat in the final build
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     
+    compileOnly enforcedPlatform('com.ibm.cics:com.ibm.cics.ts.bom:5.5-20191121085445-PH14856')
+    
     // Don't include JCICS in the final build
-    compileOnly("com.ibm.cics:com.ibm.cics.server:1.700.0-5.5-PH10453")
+    compileOnly("com.ibm.cics:com.ibm.cics.server")
 }
 
