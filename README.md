@@ -64,7 +64,7 @@ This creates a WAR file inside the `target` directory.
     
 2. Create a CICS Bundle Project with a Dynamic Web Project include for the built war file.
 
-3. Add the deploy the CICS Bundle Project to CICS.
+3. Deploy the CICS Bundle Project to CICS.
 
 4. Enable the JVM Server and CICS Bundle
 
