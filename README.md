@@ -4,6 +4,12 @@ This sample project demonstrates how you can write a Spring Boot application to 
 
 Java™ Transaction API (JTA) is descrbed in the [IBM Java™ Transaction API (JTA)](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.4.0/applications/developing/java/dfhpj2_jta.html)
 
+The sample also demonstrates how to use SpringBoots @Transactional annotation to manage transactions instead of using Java™ Transaction API (JTA).  
+
+Information on [@Transactional](https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/transaction.html)
+
+The built war file from this project is deployed into CICS via a CICS Bundle Project.
+
 For more information, see blog post - link TBC.
 
 ## Prerequisites
@@ -52,29 +58,26 @@ This creates a WAR file inside the `target` directory.
 
 ## Deploying
 
-1. Transfer the WAR file to zFS for example using FTP. 
-
-2. Ensure you have the following feature in `server.xml`:
+1. Ensure you have the following feature in `server.xml`:
 
     - servlet-3.1
     
-3. Add the app configuration to `server.xml`
+2. Create a CICS Bundle Project with a Dynamic Web Project include for the built war file.
 
-    Here's an example of configuration needed in `server.xml`:
+3. Add the deploy the CICS Bundle Project to CICS.
 
-    ```
-    <application location="/u/myuser/spring/com.ibm.cics.springboot.transactions-1.0.0.war" type="war">
-    </application> 
-    ```
+4. Enable the JVM Server and CICS Bundle
 
     
 ## Trying out the sample
 
-1. Find the URL for the application in messages.log e.g. `http://myzos.mycompany.com:32000/com.ibm.cics.springboot.transactions-1.0.0/`. 
+1. Find the URL for the application in messages.log e.g. `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/`. 
 2. Visit the URL from the browser.
-3. The browser will respond with the message "Greetings from com.ibm.cics.springboot.transaction servlet", and the TSQ will have the message "Example of a commit".
-4. If you then visit the rollback url e.g `http://myzos.mycompany.com:32000/com.ibm.cics.springboot.transactions-1.0.0/rollback/`
-5. The browser will respond with the message "Greetings from com.ibm.cics.springboot.transaction servlet rollback" and the TSQ will have the message "Example of a commit before rollback", but the message "This will be rolled back" will not be present on the TSQ as this is rolled back by the Java™ Transaction API (JTA) manager.
+3. The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction servlet", and the TSQ will have the message "Example of a commit".
+4. If you then visit the rollback url e.g `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/rollback/`
+5. The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction servlet rollback" and the TSQ will have the message "Example of a commit before rollback", but the message "This will be rolled back" will not be present on the TSQ as this is rolled back by the Java™ Transaction API (JTA) manager.
+6. If you then visit the @Transaction url e.g `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/transactional/`
+7. The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction transactional" and the TSQ will have the messages  Writing hello, Writing cics,Writing transaction, Writing onto, Writing next, Writing one, but the transaction request that had "goodbye","error","fred" will not be present on the TSQ, as SpringBoots transaction manager will have rolled back.           
 
 ## License
 This project is licensed under [Apache License Version 2.0](LICENSE). 
