@@ -1,10 +1,10 @@
 # cics-java-liberty-springboot-transactions
 
-This sample project demonstrates how you can write a Spring Boot application to integrate with IBM CICS transactions when you deploy it to a Liberty JVM server.  The application uses a web browser front end, the web request then uses Java™ Transaction API (JTA) to manage a simple CICS write to a CICS TSQ using a UserTransaction context.
+This sample project demonstrates how you can write a Spring Boot application to integrate with IBM CICS transactions when you deploy it to a Liberty JVM server.  The application uses a web browser front end, the web request then uses Java™ Transaction API (JTA) that manages a simple CICS write to a CICS TSQ using a UserTransaction context.
 
 Java™ Transaction API (JTA) is descrbed in the [IBM Java™ Transaction API (JTA)](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.4.0/applications/developing/java/dfhpj2_jta.html)
 
-The sample also demonstrates how to use SpringBoots @Transactional annotation to manage transactions instead of using Java™ Transaction API (JTA).  
+The sample also demonstrates how to use a Spring Boot @Transactional annotation to manage transactions instead of using Java™ Transaction API (JTA) directly.  
 
 Information on [@Transactional](https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/transaction.html)
 
@@ -62,11 +62,11 @@ This creates a WAR file inside the `target` directory.
 
     - servlet-3.1
     
-2. Create a CICS Bundle Project with a Dynamic Web Project include for the built war file.
+2. Create a CICS bundle project with a Dynamic Web Project include for the built war file.
 
-3. Deploy the CICS Bundle Project to CICS.
+3. Deploy the CICS bundle project to CICS.
 
-4. Enable the JVM Server and CICS Bundle
+4. Enable the JVM server and CICS Bundle
 
     
 ## Trying out the sample
@@ -75,9 +75,9 @@ This creates a WAR file inside the `target` directory.
 2. Visit the URL from the browser.
 3. The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction servlet", and the TSQ will have the message "Example of a commit".
 4. If you then visit the rollback url e.g `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/rollback/`
-5. The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction servlet rollback" and the TSQ will have the message "Example of a commit before rollback", but the message "This will be rolled back" will not be present on the TSQ as this is rolled back by the Java™ Transaction API (JTA) manager.
-6. If you then visit the @Transaction url e.g `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/transactional/`
-7. The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction transactional" and the TSQ will have the messages  Writing hello, Writing cics,Writing transaction, Writing onto, Writing next, Writing one, but the transaction request that had "goodbye","error","fred" will not be present on the TSQ, as SpringBoots transaction manager will have rolled back.           
+ The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction servlet rollback" and the TSQ will have the message "Example of a commit before rollback", but the message "This will be rolled back" will not be present on the TSQ as this is rolled back by the Java™ Transaction API (JTA) manager.
+5. If you then visit the @Transaction url e.g `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/transactional/`
+The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction transactional" and the TSQ will have the messages  Writing hello, Writing cics,Writing transaction, Writing onto, Writing next, Writing one, but the transaction request that had "goodbye","error","fred" will not be present on the TSQ, as SpringBoots transaction manager will have rolled back.           
 
 ## License
 This project is licensed under [Apache License Version 2.0](LICENSE). 
