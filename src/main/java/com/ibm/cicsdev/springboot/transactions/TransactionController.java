@@ -45,7 +45,8 @@ public class TransactionController {
 			System.out.println("Failed to write data to TSQ");
 		}
 		
-		//This should error and rollback as error in data sent in this transaction
+		//This should error and rollback as error in data sent in this transaction.  
+		//The @Tranascational method will rollback automatically on error.
 		try {
 		transactional.exampleTransactional("goodbye","error","fred");
 		}
