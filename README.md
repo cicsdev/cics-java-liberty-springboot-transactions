@@ -2,7 +2,7 @@
 
 This sample project demonstrates how you can write a Spring Boot application to integrate with IBM CICS transactions when you deploy it to a Liberty JVM server.  The application uses a web browser front end, the web request then uses Java™ Transaction API (JTA) that manages a simple CICS write to a CICS TSQ using a UserTransaction context.
 
-Java™ Transaction API (JTA) is descrbed in the [IBM Java™ Transaction API (JTA)](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.4.0/applications/developing/java/dfhpj2_jta.html)
+Java™ Transaction API (JTA) is described in the [IBM Java™ Transaction API (JTA)](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.4.0/applications/developing/java/dfhpj2_jta.html)
 
 The sample also demonstrates how to use a Spring Boot @Transactional annotation to manage transactions instead of using Java™ Transaction API (JTA) directly.  
 
@@ -66,7 +66,7 @@ This creates a WAR file inside the `target` directory.
 
 3. Deploy the CICS bundle project to CICS.
 
-4. Enable the JVM server and CICS bundle
+4. Enable the JVM server and CICS bundle.
 
     
 ## Trying out the sample
@@ -76,8 +76,8 @@ This creates a WAR file inside the `target` directory.
 3. The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction servlet", and the TSQ will have the message "Example of a commit".
 4. If you then visit the rollback url e.g `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/rollback/`
  The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction servlet rollback" and the TSQ will have the message "Example of a commit before rollback", but the message "This will be rolled back" will not be present on the TSQ as this is rolled back by the Java™ Transaction API (JTA) manager.
-5. If you then visit the @Transaction url e.g `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/transactional/`
-The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction transactional" and the TSQ will have the messages  Writing hello, Writing cics,Writing transaction, Writing onto, Writing next, Writing one, but the transaction request that had "goodbye","error","fred" will not be present on the TSQ, as SpringBoots transaction manager will have rolled back.           
+5. If you then visit the @Transaction url e.g `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/transactional/`,
+the browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction transactional" and the TSQ will have the messages  Writing hello, Writing cics,Writing transaction, Writing onto, Writing next, Writing one, but the transaction request that had "goodbye","error","fred" will not be present on the TSQ, as SpringBoots transaction manager will have rolled back.           
 
 ## License
 This project is licensed under [Apache License Version 2.0](LICENSE). 
