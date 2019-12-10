@@ -66,7 +66,7 @@ This creates a WAR file inside the `target` directory.
 
 3. Deploy the CICS bundle project to CICS.
 
-4. Enable the JVM server and CICS Bundle
+4. Enable the JVM server and CICS bundle
 
     
 ## Trying out the sample
