@@ -31,7 +31,6 @@ targetCompatibility = 1.8
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
-	compile("org.springframework.boot:spring-boot-devtools")
 	
 	// https://mvnrepository.com/artifact/javax.transaction/javax.transaction-api
 	// compile group is for external dependency
