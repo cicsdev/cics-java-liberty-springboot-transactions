@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE")
+	classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.5.RELEASE")
     }
 }
 
@@ -19,6 +19,15 @@ war
    enabled = true
    baseName = 'com.ibm.cicsdev.springboot.transactions'
    version = '1.0.0'
+}
+
+
+eclipse
+{
+    classpath
+    {
+        downloadJavadoc = true 
+    }
 }
 
 
