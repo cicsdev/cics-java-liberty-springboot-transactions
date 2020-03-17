@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.2.5.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.ibm.cicsdev.springboot.transactions</groupId>
-	<artifactId>com.ibm.cicsdev.springboot.transactions</artifactId>
+	<groupId>cics-java-liberty-springboot-transactions</groupId>
+	<artifactId>cics-java-liberty-springboot-transactions</artifactId>
 	<version>1.0.0</version>
 	<packaging>war</packaging>
-	<name>com.ibm.cicsdev.springboot.transactions</name>
+	<name>cics-java-liberty-springboot-transactions</name>
 	<description>Demo project for Spring and Liberty transactions</description>
 
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
-	
-			<dependencyManagement>
+    <dependencyManagement>
 	  <dependencies>
 	    <dependency>
 	      <groupId>com.ibm.cics</groupId>
@@ -31,38 +29,31 @@
 	     </dependency>
 	  </dependencies>
     </dependencyManagement>
-     	<dependencies>
+	<dependencies>
+	    	<!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
+		<dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-tx</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>com.ibm.cics</groupId>
+		    <artifactId>com.ibm.cics.server</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-				<dependency>
-		    <groupId>com.ibm.cics</groupId>
-		    <artifactId>com.ibm.cics.server</artifactId>
-		</dependency>
-		
+				
 		<!-- https://mvnrepository.com/artifact/javax.transaction/javax.transaction-api -->
 		<dependency>
     		<groupId>javax.transaction</groupId>
     		<artifactId>javax.transaction-api</artifactId>
     	</dependency>
-    	
-    	<!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
+
 		<dependency>
-    	<groupId>org.springframework</groupId>
-    	<artifactId>spring-tx</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

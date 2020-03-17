@@ -1,86 +1,64 @@
 package com.ibm.cicsdev.springboot.transactions;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.transaction.UserTransaction;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
+import com.ibm.cics.server.CicsConditionException;
 import com.ibm.cics.server.TSQ;
 
+
 @Component
-public class BeanTransactions {
+public class BeanTransactions {	
 	
-	public void exampleCommit() {
-
-		UserTransaction tran = lookupContext();
-
-		// Commit a message to the TSQ
-		try {
-			// Set up our TSQ to be ready to write
-			TSQ targetQueue = new TSQ();
-			targetQueue.setName("EXAMPLE");
-
-			// Start our user transaction
-			tran.begin();
-
-			// Write a simple phrase to the queue and then commit
-			targetQueue.writeString("Example of a commit");
-
-			tran.commit();
-
-		} catch (Exception e) {
-			System.out.println("exampleCommit: exception");
-			e.printStackTrace();
-		}
-	}
+	@Autowired
+    private PlatformTransactionManager transactionManager;
 	
-	public void exampleCommitAndRollback() {
-
-		UserTransaction tran = lookupContext();
-
-		// Commit a message to the TSQ
-		try {
-			// Set up our TSQ to be ready to write
-			TSQ targetQueue = new TSQ();
-			targetQueue.setName("EXAMPLE");
-
-			// Start our user transaction
-			tran.begin();
-
-			// Write a simple phrase to the queue and then commit
-			targetQueue.writeString("Example of a commit before rollback");
-
-			tran.commit();
-			
-			// Start another user transaction that will be rolled back		
-			tran.begin();
-
-			targetQueue.writeString("This will be rolled back");
-
-			tran.rollback();
-
-		} catch (Exception e) {
-			System.out.println("exampleCommit: exception");
-			e.printStackTrace();
-		}
-	}
-	
-	private UserTransaction lookupContext() {
-
-		// Find the Java EE (Liberty) JNDI transaction manager
-		InitialContext ctx;
-		UserTransaction tran = null;
-		try {
-			ctx = new InitialContext();
-			tran = (UserTransaction) ctx.lookup("java:comp/UserTransaction");
-
-		} catch (NamingException e1) {
-			e1.printStackTrace();
-			System.out.println("exampleCommit: JTA JNDI lookup failed");
-		}
-
-		return tran;
-	}
-
+	private TransactionTemplate tranTemplate;		   
+    
+    public void exampleBeanManangedTransaction(String str) {
+    	
+    	tranTemplate = new TransactionTemplate(transactionManager);
+        tranTemplate.setPropagationBehavior(TransactionTemplate.PROPAGATION_REQUIRED);
+    	
+        // Execute the transactional method to do the CICS update
+    	tranTemplate.execute(new TransactionCallbackWithoutResult() {
+    		
+    	    protected void doInTransactionWithoutResult(TransactionStatus status) {
+    	    	
+    	    	if (status.isNewTransaction()) {
+    	    		System.out.println("exampleBMTCommit: Starting new JTA transaction ");    	    		
+    	    	}  	    	
+    	    
+    			
+    			// Force a rollback if the input matches a specific string 
+    			if (str.equalsIgnoreCase("rollback")) {
+    				status.setRollbackOnly();    				
+    			}
+    			
+    			//Initilaise TSQ
+    			TSQ targetQueue = new TSQ();
+    			targetQueue.setName("EXAMPLE");
+    			
+    			// Write a string to the TSQ 
+    			try {    				
+					targetQueue.writeString("Example of a BMT commit");					
+					
+				// If JCICS command fails then force a rollback of the JTA transaction and the CICS UOW	
+				} catch (CicsConditionException e) {
+					
+					System.out.println("exampleBMTCommit: CicsConditionException, forcing rollback");
+					status.setRollbackOnly();
+					e.printStackTrace();
+				} 
+				  	        
+    	    }
+    	});
+    } 
+    
+    
 }

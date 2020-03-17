@@ -8,21 +8,21 @@ id 'idea'
 id 'war'
 }
 
-group = 'com.ibm.cicsdev.springboot.transactions'
+group = 'cics-java-liberty-springboot-transactions'
 version = '1.0.0'
 sourceCompatibility = '1.8'
 
 bootWar
 {
    enabled = true
-   baseName = 'com.ibm.cicsdev.springboot.transactions'
+   baseName = 'cics-java-liberty-springboot-transactions'
    version = '1.0.0'
 }
 
 bootJar
 { 
    enabled=true
-   baseName = 'com.ibm.cicsdev.springboot.transactions'
+   baseName = 'cics-java-liberty-springboot-transactions'
    version =  '1.0.0'
 }
 

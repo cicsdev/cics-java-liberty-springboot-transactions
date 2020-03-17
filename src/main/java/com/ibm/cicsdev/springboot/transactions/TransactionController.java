@@ -15,24 +15,16 @@ import com.ibm.cics.server.NotAuthorisedException;
 @RestController
 public class TransactionController {
 
-	@Autowired BeanTransactions beanTran;
-	
+
 	@RequestMapping("/")
 	public String index() {
 
-		beanTran.exampleCommit();
 		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet";
+	
 		
 	}
 	
-	@RequestMapping("/rollback")
-	public String rollback() {
-
-		beanTran.exampleCommitAndRollback();
-		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet rollback";
-	}
-	
-	@Autowired ContainerTransactions transactional; 
+@Autowired ContainerTransactions transactional; 
 	
 	@RequestMapping("/transactional")
 	public String transactionalrollback() throws InvalidRequestException, IOErrorException, LengthErrorException, InvalidSystemIdException, ISCInvalidRequestException, ItemErrorException, NotAuthorisedException {
@@ -63,5 +55,41 @@ public class TransactionController {
 		}
 		return "Greetings from com.ibm.cicsdev.springboot.transaction transactional";
 	}
+	
+	
+	@Autowired BeanTransactions beanTran;
+	
+	@RequestMapping("/BMTrollback")
+	public String rollbackBMT() {
+
+		beanTran.exampleBeanManangedTransaction("rollback");;
+		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet rollback";
+	}
+	
+	@RequestMapping("/BMTcommit")
+	public String commitBMT() {
+
+		beanTran.exampleBeanManangedTransaction("commit");;
+		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet commit";
+	}
+	
+	@Autowired JNDIBeanManagedTransactions jndiTran;
+	
+	@RequestMapping("/JNDIcommit")
+	public String jndiCommit() {
+
+		jndiTran.exampleJNDICommit();
+		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet jndiCommit";
+	}
+	
+	@RequestMapping("/JNDIcommitAndRollback")
+	public String jndiCommitAndRollback() {
+
+		jndiTran.exampleJNDICommitAndRollback();
+		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet jndiCommitAndRollback";
+	}
+	
+	
+	
 	
 }
