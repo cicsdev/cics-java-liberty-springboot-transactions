@@ -1,4 +1,4 @@
-# cics-java-liberty-springboot-transactions
+jsp-2.3# cics-java-liberty-springboot-transactions
 
 This sample project demonstrates how you can write a Spring Boot application to integrate with IBM CICS transactions when you deploy it to a Liberty JVM server.  The application uses a web browser front end, the web request then uses Java™ Transaction API (JTA) that manages a simple CICS write to a CICS TSQ using a UserTransaction context.
 
@@ -60,7 +60,7 @@ This creates a WAR file inside the `target` directory.
 
 1. Ensure you have the following feature in `server.xml`:
 
-    - servlet-3.1
+    - jsp-2.3
     
 2. Create a CICS bundle project with a Dynamic Web Project include for the built war file.
 
@@ -71,13 +71,11 @@ This creates a WAR file inside the `target` directory.
     
 ## Trying out the sample
 
-1. Find the URL for the application in messages.log e.g. `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/`. 
-2. Visit the URL from the browser.
-3. The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction servlet", and the TSQ will have the message "Example of a commit".
-4. If you then visit the rollback url e.g `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/rollback/`
- The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction servlet rollback" and the TSQ will have the message "Example of a commit before rollback", but the message "This will be rolled back" will not be present on the TSQ as this is rolled back by the Java™ Transaction API (JTA) manager.
-5. If you then visit the @Transaction url e.g `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/transactional/`,
-the browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction transactional" and the TSQ will have the messages  Writing hello, Writing cics,Writing transaction, Writing onto, Writing next, Writing one, but the transaction request that had "goodbye","error","fred" will not be present on the TSQ, as SpringBoots transaction manager will have rolled back.           
+1. Find the URL for the application in messages.log e.g. `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/transactional`. 
+2. Visit the URL from the browser which will demonstrate an @Transactional container managed bean.
+3. The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction transactional" and the TSQ will have the messages  Writing hello, Writing cics,Writing transaction, Writing onto, Writing next, Writing one, but the transaction request that had "goodbye","error","fred" will not be present on the TSQ, as SpringBoots transaction manager will have rolled back.
+4. Next, try the SpringBoot Bean managed way of managing transactions by visting the url `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/BMTcommit` and the TSQ will have Example of a BMT commit.  If you try the rollback version of this at `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/BMTrollback` the transaction is rolled back and nothing is written to the TSQ.
+5. Finally, try the JNDI way by visiting the rollback url e.g `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0/JNDIcommit/`, and the browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction servlet jndiCommit" and a message "Example of a JNDIcommit before rollback" will be written to the TSQ.  Utilising the rollback version the browser at `http://myzos.mycompany.com:32000/com.ibm.cicsdev.springboot.transactions-1.0.0//JNDIcommitAndRollback/`  will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction servlet jndiCommitAndRollback" and the TSQ will have the message "Example of a commit before rollback", but the message "This will be rolled back" will not be present on the TSQ as this is rolled back by the Java™ Transaction API (JTA) manager.          
 
 ## License
 This project is licensed under [Apache License Version 2.0](LICENSE). 
