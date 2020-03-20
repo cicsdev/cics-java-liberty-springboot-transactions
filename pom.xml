@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>cics-java-liberty-springboot-transactions</groupId>
 	<artifactId>cics-java-liberty-springboot-transactions</artifactId>
-	<version>1.0.0</version>
+	<version>0.1.0</version>
 	<packaging>war</packaging>
 	<name>cics-java-liberty-springboot-transactions</name>
 	<description>Demo project for Spring and Liberty transactions</description>
