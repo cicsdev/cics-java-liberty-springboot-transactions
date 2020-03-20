@@ -12,19 +12,7 @@ group = 'cics-java-liberty-springboot-transactions'
 version = '0.1.0'
 sourceCompatibility = '1.8'
 
-bootWar
-{
-   enabled = true
-   baseName = 'cics-java-liberty-springboot-transactions'
-   version = '0.1.0'
-}
 
-bootJar
-{ 
-   enabled=true
-   baseName = 'cics-java-liberty-springboot-transactions'
-   version =  '0.1.0'
-}
 
 // If in Eclipse, add Javadoc to the local project classpath
 eclipse
