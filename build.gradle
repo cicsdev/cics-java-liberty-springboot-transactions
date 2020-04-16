@@ -8,7 +8,8 @@ id 'idea'
 id 'war'
 }
 
-group = 'cics-java-liberty-springboot-transactions'
+group = 'com.ibm.cicsdev.springboot'
+archivesBaseName='com.ibm.cicsdev.springboot.transactions'
 version = '0.1.0'
 sourceCompatibility = '1.8'
 
