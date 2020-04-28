@@ -22,7 +22,13 @@ For more information, see blog post - link TBC.
 
 ## Building 
 
-You can choose to build the project using Gradle or Maven. They will produce the same results.  The project includes the Gradle and Maven wrappers, which will automatically download the correct version of the tools if not present on your workstation.
+You can choose to build the project using Gradle or Maven. The project includes both Gradle and Maven wrappers, these wrappers will automatically download required components from your chosen build tool; if not already present on your workstation.
+
+You can also build the sample project through plug-in tooling of your chosen IDE. Both Gradle buildship and Maven m2e will integrate with Eclipse's "Run As..." capability allowing you to specify the required build-tasks. There are typically clean bootWar for Gradle and clean package for Maven, as reflected in the command line approach shown later.
+
+Note: When building a WAR file for deployment to Liberty it is good practice to exclude Tomcat from the final runtime artifact. We demonstrate this in the pom.xml with the provided scope, and in build.gradle with the providedRuntime() dependency.
+
+Note: If you import the project to an IDE of your choice, you might experience local project compile errors. To resolve these errors you should refresh your IDEs configuration. For example, in Eclipse: for Gradle, right-click on "Project", select "Gradle -> Refresh Gradle Project", or for Maven, right-click on "Project", select "Maven -> Update Project...".
 
 ### Gradle
 
@@ -67,6 +73,20 @@ This creates a WAR file inside the `target` directory.
 3. Deploy the CICS bundle project to CICS.
 
 4. Enable the JVM server and CICS bundle.
+
+5. Optionally, manually upload the WAR file to zFS and add an <application> configuration to server.xml:
+
+``` XML
+   <application id="cics-java-liberty-springboot-transactions-0.1.0"  
+     location="${server.config.dir}/springapps/cics-java-liberty-springboot-transactions-0.1.0.war"  
+     name="cics-java-liberty-springboot-transactions-0.1.0" type="war">
+     <application-bnd>
+        <security-role name="cicsAllAuthenticated">
+            <special-subject type="ALL_AUTHENTICATED_USERS"/>
+        </security-role>
+     </application-bnd>  
+   </application>
+```
 
     
 ## Trying out the sample
