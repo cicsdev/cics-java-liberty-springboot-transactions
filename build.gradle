@@ -1,18 +1,17 @@
 plugins
 {
-id 'org.springframework.boot' version '2.2.5.RELEASE'
-id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-id 'java'
-id 'eclipse'
-id 'idea'
-id 'war'
+	id 'org.springframework.boot' version '2.2.5.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+	id 'eclipse'
+	id 'idea'
+	id 'war'
 }
 
 group = 'com.ibm.cicsdev.springboot'
 archivesBaseName='com.ibm.cicsdev.springboot.transactions'
 version = '0.1.0'
 sourceCompatibility = '1.8'
-
 
 
 // If in Eclipse, add Javadoc to the local project classpath
@@ -24,10 +23,12 @@ eclipse
     }
 }
 
+
 repositories
 {
-mavenCentral()
+	mavenCentral()
 }
+
 
 dependencies
 {
