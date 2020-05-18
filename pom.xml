@@ -1,80 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.5.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-	<groupId>cics-java-liberty-springboot-transactions</groupId>
-	<artifactId>cics-java-liberty-springboot-transactions</artifactId>
-	<version>0.1.0</version>
-	<packaging>war</packaging>
-	<name>cics-java-liberty-springboot-transactions</name>
-	<description>Demo project for Spring and Liberty transactions</description>
-
-	<properties>
-		<java.version>1.8</java.version>
-	</properties>
-    <dependencyManagement>
-	  <dependencies>
-	    <dependency>
-	      <groupId>com.ibm.cics</groupId>
-	      <artifactId>com.ibm.cics.ts.bom</artifactId>
-	      <version>5.5-20191121085445-PH14856</version>
-	      <type>pom</type>
-	      <scope>import</scope>
-	     </dependency>
-	  </dependencies>
-    </dependencyManagement>
-	<dependencies>
-	    	<!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
-		<dependency>
-    	<groupId>org.springframework</groupId>
-    	<artifactId>spring-tx</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>com.ibm.cics</groupId>
-		    <artifactId>com.ibm.cics.server</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <!-- Inherit defaults from Spring Boot Parent-->
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.2.5.RELEASE</version>
+    <relativePath/>
+  </parent>
+  
+  <!--  Application properties -->
+  <groupId>cics-java-liberty-springboot-transactions</groupId>
+  <artifactId>cics-java-liberty-springboot-transactions</artifactId>
+  <version>0.1.0</version>  
+  <name>cics-java-liberty-springboot-transactions</name>
+  <description>Demo project for Spring and Liberty transactions</description>
+  <properties>
+    <java.version>1.8</java.version>
+  </properties>
+  
+  <!-- CICS BOM (as of 21st Nov 2019) -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.ibm.cics</groupId>
+        <artifactId>com.ibm.cics.ts.bom</artifactId>
+        <version>5.5-20191121085445-PH14856</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  
+  <dependencies>   
+    <!-- Compile against, but don't include JCICS in the final build (version and scope are from BOM) -->
+    <dependency>
+      <groupId>com.ibm.cics</groupId>
+      <artifactId>com.ibm.cics.server</artifactId>
+    </dependency>
+    
+    <!-- Spring-transactions -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+    </dependency>
+    
+    <!-- Spring Boot web support -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
 				
-		<!-- https://mvnrepository.com/artifact/javax.transaction/javax.transaction-api -->
-		<dependency>
-    		<groupId>javax.transaction</groupId>
-    		<artifactId>javax.transaction-api</artifactId>
-    	</dependency>
+    <!-- javax.transaction API -->
+    <dependency>
+      <groupId>javax.transaction</groupId>
+      <artifactId>javax.transaction-api</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-	</dependencies>
+    <!-- Compile against, but don't include TomCat in the runtime build -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+  <!-- Package as an executable war (default jar) -->
+  <packaging>war</packaging>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
