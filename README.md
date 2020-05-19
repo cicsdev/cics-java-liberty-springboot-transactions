@@ -74,7 +74,7 @@ This creates a WAR file inside the `target` directory.
 
 4. Enable the JVM server and CICS bundle.
 
-5. Optionally, manually upload the WAR file to zFS and add an <application> configuration to server.xml:
+5. Optionally, manually upload the WAR file to zFS and add an <application> configuration element to server.xml:
 
 ``` XML
    <application id="cics-java-liberty-springboot-transactions-0.1.0"  
