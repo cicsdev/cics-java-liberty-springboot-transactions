@@ -12,10 +12,10 @@
   </parent>
   
   <!--  Application properties -->
-  <groupId>cics-java-liberty-springboot-transactions</groupId>
+  <groupId>com.ibm.cicsdev</groupId>
   <artifactId>cics-java-liberty-springboot-transactions</artifactId>
   <version>0.1.0</version>  
-  <name>cics-java-liberty-springboot-transactions</name>
+  <name>com.ibm.cicsdev.springboot.transactions</name>
   <description>Demo project for Spring and Liberty transactions</description>
   <properties>
     <java.version>1.8</java.version>
