@@ -12,6 +12,11 @@ import com.ibm.cics.server.CicsConditionException;
 import com.ibm.cics.server.TSQ;
 
 
+/**
+ * Bean Managed Transactions
+ * @author ChrisAtkinson
+ *
+ */
 @Component
 public class BeanTransactions {	
 	
@@ -20,6 +25,9 @@ public class BeanTransactions {
 	
 	private TransactionTemplate tranTemplate;		   
     
+    /**
+     * @param str
+     */
     public void exampleBeanManangedTransaction(String str) {
     	
     	tranTemplate = new TransactionTemplate(transactionManager);

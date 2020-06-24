@@ -8,8 +8,16 @@ import org.springframework.stereotype.Component;
 
 import com.ibm.cics.server.TSQ;
 
+/**
+ * JNDI Bean Managed Transactions
+ * @author ChrisAtkinson
+ *
+ */
 @Component
 public class JNDIBeanManagedTransactions {
+	/**
+	 * JNDI Commit
+	 */
 	public void exampleJNDICommit() {
 
 		UserTransaction tran = lookupContext();
@@ -34,6 +42,9 @@ public class JNDIBeanManagedTransactions {
 		}
 	}
 	
+	/**
+	 * JNDI Commit and Rollback
+	 */
 	public void exampleJNDICommitAndRollback() {
 
 		UserTransaction tran = lookupContext();

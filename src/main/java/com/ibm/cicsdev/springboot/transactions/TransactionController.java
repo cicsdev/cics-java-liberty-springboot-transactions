@@ -1,22 +1,26 @@
 package com.ibm.cicsdev.springboot.transactions;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ibm.cics.server.IOErrorException;
-import com.ibm.cics.server.ISCInvalidRequestException;
-import com.ibm.cics.server.InvalidRequestException;
-import com.ibm.cics.server.InvalidSystemIdException;
-import com.ibm.cics.server.ItemErrorException;
-import com.ibm.cics.server.LengthErrorException;
-import com.ibm.cics.server.NotAuthorisedException;
+import com.ibm.cics.server.CicsConditionException;
 
+
+/**
+ * Controller
+ * @author ChrisAtkinson
+ *
+ */
 @RestController
 public class TransactionController {
 
 
-	@RequestMapping("/")
+	/**
+	 * Root web request
+	 * @return message
+	 */
+	@GetMapping("/")
 	public String index() {
 
 		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet";
@@ -26,8 +30,13 @@ public class TransactionController {
 	
 @Autowired ContainerTransactions transactional; 
 	
-	@RequestMapping("/transactional")
-	public String transactionalrollback() throws InvalidRequestException, IOErrorException, LengthErrorException, InvalidSystemIdException, ISCInvalidRequestException, ItemErrorException, NotAuthorisedException {
+	/**
+	 * Transactional web request
+	 * @return message
+	 * @throws CicsConditionException 
+	 */
+	@GetMapping("/transactional")
+	public String transactionalrollback() throws CicsConditionException {
 		
 		//This should work and commit as error is not in data sent in this transaction
 		try {
@@ -59,14 +68,22 @@ public class TransactionController {
 	
 	@Autowired BeanTransactions beanTran;
 	
-	@RequestMapping("/BMTrollback")
+	/**
+	 * Bean transaction rollback web request
+	 * @return message
+	 */
+	@GetMapping("/BMTrollback")
 	public String rollbackBMT() {
 
 		beanTran.exampleBeanManangedTransaction("rollback");;
 		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet rollback";
 	}
 	
-	@RequestMapping("/BMTcommit")
+	/**
+	 * Bean transaction commit web request
+	 * @return message
+	 */
+	@GetMapping("/BMTcommit")
 	public String commitBMT() {
 
 		beanTran.exampleBeanManangedTransaction("commit");;
@@ -75,14 +92,22 @@ public class TransactionController {
 	
 	@Autowired JNDIBeanManagedTransactions jndiTran;
 	
-	@RequestMapping("/JNDIcommit")
+	/**
+	 * JNDI Commit Web request
+	 * @return message
+	 */
+	@GetMapping("/JNDIcommit")
 	public String jndiCommit() {
 
 		jndiTran.exampleJNDICommit();
 		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet jndiCommit";
 	}
 	
-	@RequestMapping("/JNDIcommitAndRollback")
+	/**
+	 * JNDI Commit and Rollback Web request
+	 * @return message
+	 */
+	@GetMapping("/JNDIcommitAndRollback")
 	public String jndiCommitAndRollback() {
 
 		jndiTran.exampleJNDICommitAndRollback();
