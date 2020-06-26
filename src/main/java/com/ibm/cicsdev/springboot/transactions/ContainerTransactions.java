@@ -3,6 +3,7 @@ package com.ibm.cicsdev.springboot.transactions;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ibm.cics.server.CicsConditionException;
 import com.ibm.cics.server.IOErrorException;
 import com.ibm.cics.server.ISCInvalidRequestException;
 import com.ibm.cics.server.InvalidRequestException;
@@ -21,16 +22,10 @@ public class ContainerTransactions {
 	/**
 	 * Example @transactional commit or rollback
 	 * @param text
-	 * @throws InvalidRequestException
-	 * @throws IOErrorException
-	 * @throws LengthErrorException
-	 * @throws InvalidSystemIdException
-	 * @throws ISCInvalidRequestException
-	 * @throws ItemErrorException
-	 * @throws NotAuthorisedException
+	 * @throws CicsConditionException 
 	 */
 	@Transactional (rollbackFor=Exception.class)
-	public void exampleTransactional(String... text) throws InvalidRequestException, IOErrorException, LengthErrorException, InvalidSystemIdException, ISCInvalidRequestException, ItemErrorException, NotAuthorisedException {
+	public void exampleTransactional(String... text) throws CicsConditionException {
 
 
 	    // Set up our TSQ to be ready to write
