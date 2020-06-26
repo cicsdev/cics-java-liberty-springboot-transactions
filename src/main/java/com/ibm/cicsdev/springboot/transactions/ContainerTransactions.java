@@ -4,13 +4,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ibm.cics.server.CicsConditionException;
-import com.ibm.cics.server.IOErrorException;
-import com.ibm.cics.server.ISCInvalidRequestException;
-import com.ibm.cics.server.InvalidRequestException;
-import com.ibm.cics.server.InvalidSystemIdException;
-import com.ibm.cics.server.ItemErrorException;
-import com.ibm.cics.server.LengthErrorException;
-import com.ibm.cics.server.NotAuthorisedException;
 import com.ibm.cics.server.TSQ;
 /**
  * @Transactional
