@@ -12,11 +12,15 @@ import com.ibm.cics.server.CicsConditionException;
 import com.ibm.cics.server.TSQ;
 
 
-/**
- * Bean Managed Transactions
- * @author ChrisAtkinson
- *
- */
+/* Licensed Materials - Property of IBM                                   */
+/*                                                                        */
+/* SAMPLE                                                                 */
+/*                                                                        */
+/* (c) Copyright IBM Corp. 2020 All Rights Reserved                       */
+/*                                                                        */
+/* US Government Users Restricted Rights - Use, duplication or disclosure */
+/* restricted by GSA ADP Schedule Contract with IBM Corp                  */
+/*                                                                        */
 @Component
 public class BeanTransactions {	
 	
