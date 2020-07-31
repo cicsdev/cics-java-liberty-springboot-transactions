@@ -12,6 +12,10 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 /* US Government Users Restricted Rights - Use, duplication or disclosure */
 /* restricted by GSA ADP Schedule Contract with IBM Corp                  */
 /*                                                                        */
+/**
+ * ServletInitializer
+ *
+ */
 public class ServletInitializer extends SpringBootServletInitializer {
 
 	@Override

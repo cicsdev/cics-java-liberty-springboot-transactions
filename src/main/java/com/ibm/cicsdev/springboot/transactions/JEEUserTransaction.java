@@ -17,12 +17,17 @@ import com.ibm.cics.server.TSQ;
 /* US Government Users Restricted Rights - Use, duplication or disclosure */
 /* restricted by GSA ADP Schedule Contract with IBM Corp                  */
 /*                                                                        */
+/**
+ * This uses a jndi look up for a user transaction context.
+ * It then uses JTA to manage the transaction.
+ *
+ */
 @Component
-public class JNDIBeanManagedTransactions {
+public class JEEUserTransaction {
 	/**
 	 * JNDI Commit
 	 */
-	public void exampleJNDICommit() {
+	public void exampleJEEUserCommit() {
 
 		UserTransaction tran = lookupContext();
 
@@ -36,20 +41,20 @@ public class JNDIBeanManagedTransactions {
 			tran.begin();
 
 			// Write a simple phrase to the queue and then commit
-			targetQueue.writeString("Example of a JNDIcommit");
+			targetQueue.writeString("Example of a JEEUser commit");
 
 			tran.commit();
 
 		} catch (Exception e) {
-			System.out.println("exampleJNDICommit: exception");
+			System.out.println("exampleJEEUserCommit: exception");
 			e.printStackTrace();
 		}
 	}
 	
 	/**
-	 * JNDI Commit and Rollback
+	 * JEEUser Commit and Rollback
 	 */
-	public void exampleJNDICommitAndRollback() {
+	public void exampleJEEUserCommitAndRollback() {
 
 		UserTransaction tran = lookupContext();
 
@@ -63,7 +68,7 @@ public class JNDIBeanManagedTransactions {
 			tran.begin();
 
 			// Write a simple phrase to the queue and then commit
-			targetQueue.writeString("Example of a JNDIcommit before rollback");
+			targetQueue.writeString("Example of a JEEUser commit before rollback");
 
 			tran.commit();
 			
@@ -75,7 +80,7 @@ public class JNDIBeanManagedTransactions {
 			tran.rollback();
 
 		} catch (Exception e) {
-			System.out.println("exampleJNDICommit: exception");
+			System.out.println("exampleJEEUserCommit: exception");
 			e.printStackTrace();
 		}
 	}
@@ -91,7 +96,7 @@ public class JNDIBeanManagedTransactions {
 
 		} catch (NamingException e1) {
 			e1.printStackTrace();
-			System.out.println("exampleJNDICommit: JTA JNDI lookup failed");
+			System.out.println("exampleJEEUserCommit: JEEUser lookup failed");
 		}
 
 		return tran;

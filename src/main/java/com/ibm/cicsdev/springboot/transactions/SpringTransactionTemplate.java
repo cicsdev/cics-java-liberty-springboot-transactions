@@ -21,8 +21,13 @@ import com.ibm.cics.server.TSQ;
 /* US Government Users Restricted Rights - Use, duplication or disclosure */
 /* restricted by GSA ADP Schedule Contract with IBM Corp                  */
 /*                                                                        */
+/**
+ * This uses the Spring PlatformTransactionManager and TransactionTemplate
+ * to manage transactions in a Bean orientated manner.
+ *
+ */
 @Component
-public class BeanTransactions {	
+public class SpringTransactionTemplate {	
 	
 	@Autowired
     private PlatformTransactionManager transactionManager;
@@ -32,7 +37,7 @@ public class BeanTransactions {
     /**
      * @param str
      */
-    public void exampleBeanManangedTransaction(String str) {
+    public void exampleSpringTemplateManangedTransaction(String str) {
     	
     	tranTemplate = new TransactionTemplate(transactionManager);
         tranTemplate.setPropagationBehavior(TransactionTemplate.PROPAGATION_REQUIRED);
@@ -43,7 +48,7 @@ public class BeanTransactions {
     	    protected void doInTransactionWithoutResult(TransactionStatus status) {
     	    	
     	    	if (status.isNewTransaction()) {
-    	    		System.out.println("exampleBMTCommit: Starting new JTA transaction ");    	    		
+    	    		System.out.println("exampleSpringTemplateCommit: Starting new transaction ");    	    		
     	    	}  	    	
     	    
     			
@@ -58,12 +63,12 @@ public class BeanTransactions {
     			
     			// Write a string to the TSQ 
     			try {    				
-					targetQueue.writeString("Example of a BMT commit");					
+					targetQueue.writeString("Example of a SpringTemplate commit");					
 					
-				// If JCICS command fails then force a rollback of the JTA transaction and the CICS UOW	
+				// If JCICS command fails then force a rollback of the transaction and the CICS UOW	
 				} catch (CicsConditionException e) {
 					
-					System.out.println("exampleBMTCommit: CicsConditionException, forcing rollback");
+					System.out.println("exampleSpringTemplateCommit: CicsConditionException, forcing rollback");
 					status.setRollbackOnly();
 					e.printStackTrace();
 				} 

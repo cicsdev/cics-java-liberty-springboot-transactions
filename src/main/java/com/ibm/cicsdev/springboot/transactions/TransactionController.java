@@ -16,6 +16,10 @@ import com.ibm.cics.server.CicsConditionException;
 /* US Government Users Restricted Rights - Use, duplication or disclosure */
 /* restricted by GSA ADP Schedule Contract with IBM Corp                  */
 /*                                                                        */
+/**
+ * Transaction Controller
+ *
+ */
 @RestController
 public class TransactionController {
 
@@ -32,7 +36,7 @@ public class TransactionController {
 		
 	}
 	
-@Autowired ContainerTransactions transactional; 
+@Autowired SpringTransactional transactional; 
 	
 	/**
 	 * Transactional web request
@@ -70,52 +74,52 @@ public class TransactionController {
 	}
 	
 	
-	@Autowired BeanTransactions beanTran;
+	@Autowired SpringTransactionTemplate springTempTran;
 	
 	/**
-	 * Bean transaction rollback web request
+	 * Spring Template managed transaction rollback web request
 	 * @return message
 	 */
-	@GetMapping("/BMTrollback")
+	@GetMapping("/STEMProllback")
 	public String rollbackBMT() {
 
-		beanTran.exampleBeanManangedTransaction("rollback");;
-		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet rollback";
+		springTempTran.exampleSpringTemplateManangedTransaction("rollback");;
+		return "Greetings from com.ibm.cicsdev.springboot.transaction template servlet rollback";
 	}
 	
 	/**
-	 * Bean transaction commit web request
+	 * Spring Template managed transaction commit web request
 	 * @return message
 	 */
-	@GetMapping("/BMTcommit")
+	@GetMapping("/STEMPcommit")
 	public String commitBMT() {
 
-		beanTran.exampleBeanManangedTransaction("commit");;
-		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet commit";
+		springTempTran.exampleSpringTemplateManangedTransaction("commit");;
+		return "Greetings from com.ibm.cicsdev.springboot.transaction template servlet commit";
 	}
 	
-	@Autowired JNDIBeanManagedTransactions jndiTran;
+	@Autowired JEEUserTransaction jeeTran;
 	
 	/**
-	 * JNDI Commit Web request
+	 * JEEUser Commit Web request
 	 * @return message
 	 */
-	@GetMapping("/JNDIcommit")
+	@GetMapping("/JEEcommit")
 	public String jndiCommit() {
 
-		jndiTran.exampleJNDICommit();
-		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet jndiCommit";
+		jeeTran.exampleJEEUserCommit();
+		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet jeeCommit";
 	}
 	
 	/**
-	 * JNDI Commit and Rollback Web request
+	 * JEEUser Commit and Rollback Web request
 	 * @return message
 	 */
 	@GetMapping("/JNDIcommitAndRollback")
 	public String jndiCommitAndRollback() {
 
-		jndiTran.exampleJNDICommitAndRollback();
-		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet jndiCommitAndRollback";
+		jeeTran.exampleJEEUserCommitAndRollback();
+		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet jeeCommitAndRollback";
 	}
 	
 	

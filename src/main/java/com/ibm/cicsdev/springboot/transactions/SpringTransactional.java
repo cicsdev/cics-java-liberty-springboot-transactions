@@ -14,8 +14,13 @@ import com.ibm.cics.server.TSQ;
 /* US Government Users Restricted Rights - Use, duplication or disclosure */
 /* restricted by GSA ADP Schedule Contract with IBM Corp                  */
 /*                                                                        */
+/**
+ * This application uses @Transactional to manage transactions in
+ * a container oriented manner.
+ *
+ */
 @Component
-public class ContainerTransactions {
+public class SpringTransactional {
 	/**
 	 * Example @transactional commit or rollback
 	 * @param text
