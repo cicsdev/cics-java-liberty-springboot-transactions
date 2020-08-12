@@ -1,12 +1,3 @@
-package com.ibm.cicsdev.springboot.transactions;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.ibm.cics.server.CicsConditionException;
-
-
 /* Licensed Materials - Property of IBM                                   */
 /*                                                                        */
 /* SAMPLE                                                                 */
@@ -16,113 +7,128 @@ import com.ibm.cics.server.CicsConditionException;
 /* US Government Users Restricted Rights - Use, duplication or disclosure */
 /* restricted by GSA ADP Schedule Contract with IBM Corp                  */
 /*                                                                        */
+
+package com.ibm.cicsdev.springboot.transactions;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+
 /**
- * Transaction Controller
+ * The main REST controller class
  *
  */
 @RestController
-public class TransactionController {
-
-
+public class TransactionController 
+{
+	// Autowire in the three main demo objects of this Project
+	@Autowired SpringTransactional transactional;
+	@Autowired SpringTransactionTemplate springTemplateTran;
+	@Autowired JEEUserTransaction jeeTran;
+	
+	
 	/**
-	 * Root web request
-	 * @return message
+	 * Provide a root for Usage: information
+	 * @return usage message
 	 */
 	@GetMapping("/")
-	public String index() {
-
-		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet";
-	
-		
+	public String index() 
+	{				
+		return "<h1>Spring Boot Transaction REST sample</h1>"
+				+ "<h3>Usage:</h3>"
+				+ "<b>/transactionalCommit</b> - Demo Spring Transactional annotation commit <br>"
+				+ "<b>/transactionalRollback</b> - Demo Spring Transactional annotation rollback <br>"
+				+ "<b>/STcommit</b> - Demo Spring Template commit <br>"
+				+ "<b>/STrollback</b> - Demo Spring Template rollback <br>"				
+				+ "<b>/JEEcommit</b> - Demo Java EE User Transaction commit <br>"
+				+ "<b>/JEErollback</b> - Demo Java EE User Transaction rollback";
 	}
 	
-@Autowired SpringTransactional transactional; 
+ 	
+	/**
+	 * Demonstrate Transactional annotation commit
+	 * @return status message
+	 */
+	@GetMapping({"/transactionalCommit", "/transactionalcommit"})
+	public String transactionalCommit() 
+	{
+		// Commit a TSQ write using Spring's @Transactional annotation
+		try 
+		{
+			return this.transactional.writeTSQ("hello CICS from transactionalCommit()");
+		}
+		catch(Exception e)
+		{							
+			e.printStackTrace();
+			return "transactionalCommit: exception: "  + e.getMessage() + ". Check dfhjvmerr for further details.";
+		}		
+	}
+	
 	
 	/**
-	 * Transactional web request
-	 * @return message
-	 * @throws CicsConditionException 
+	 * Demonstrate Transactional annotation rollback
+	 * @return status message
 	 */
-	@GetMapping("/transactional")
-	public String transactionalrollback() throws CicsConditionException {
-		
-		//This should work and commit as error is not in data sent in this transaction
-		try {
-		transactional.exampleTransactional("hello","cics","transaction");
+	@GetMapping({"/transactionalRollback", "/transactionalrollback"})
+	public String transactionalRollback()
+	{
+		// Attempt to write to a TSQ
+		// ...but when the string 'rollback' is detected in the input we 
+		// intentionally throw a runtime exception which the @Transactional 
+		// annotation has been qualified to detect and trigger a rollback.
+		try 
+		{
+			return this.transactional.writeTSQ("rollback from transactionalRollback()");
 		}
-		catch(Exception e){
-			System.out.println("Failed to write data to TSQ");
-		}
-		
-		//This should error and rollback as error in data sent in this transaction.  
-		//The @Tranascational method will rollback automatically on error.
-		try {
-		transactional.exampleTransactional("goodbye","error","fred");
-		}
-		catch(Exception e){
-			System.out.println("Failed to write data to TSQ");
-		}
-		
-		//This should work and commit as error is not in data sent in this transaction
-		try {
-		transactional.exampleTransactional("onto","next","one");
-		}
-		catch(Exception e){
-			System.out.println("Failed to write data to TSQ");
-		}
-		return "Greetings from com.ibm.cicsdev.springboot.transaction transactional";
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return "transactionalRollback: exception: "  + e.getMessage() + ". Rollback triggered - see dfhjvmerr for further details.";
+		}		
 	}
 	
-	
-	@Autowired SpringTransactionTemplate springTempTran;
+
+	/**
+	 * Spring Template managed transaction commit web request
+	 * @return message
+	 */
+	@GetMapping({"/STcommit", "/stcommit"})
+	public String springTemplateCommit() 
+	{
+		return this.springTemplateTran.writeTSQ("hello CICS from springTemplateCommit()");
+	}
+
 	
 	/**
 	 * Spring Template managed transaction rollback web request
 	 * @return message
 	 */
-	@GetMapping("/STEMProllback")
-	public String rollbackBMT() {
-
-		springTempTran.exampleSpringTemplateManangedTransaction("rollback");;
-		return "Greetings from com.ibm.cicsdev.springboot.transaction template servlet rollback";
+	@GetMapping({"/STrollback", "/strollback"})
+	public String springTemplateRollback() 
+	{
+		return this.springTemplateTran.writeTSQ("rollback from springTemplateRollback()");
 	}
+	
 	
 	/**
-	 * Spring Template managed transaction commit web request
+	 * JEE UserTransaction commit
 	 * @return message
 	 */
-	@GetMapping("/STEMPcommit")
-	public String commitBMT() {
-
-		springTempTran.exampleSpringTemplateManangedTransaction("commit");;
-		return "Greetings from com.ibm.cicsdev.springboot.transaction template servlet commit";
+	@GetMapping({"/JEEcommit", "/jeecommit"})
+	public String javaEECommit() 
+	{
+		return this.jeeTran.writeTSQ("hello CICS from javaEECommit()");				
 	}
 	
-	@Autowired JEEUserTransaction jeeTran;
 	
 	/**
-	 * JEEUser Commit Web request
+	 * JEE UserTransaction rollback
 	 * @return message
 	 */
-	@GetMapping("/JEEcommit")
-	public String jndiCommit() {
-
-		jeeTran.exampleJEEUserCommit();
-		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet jeeCommit";
-	}
-	
-	/**
-	 * JEEUser Commit and Rollback Web request
-	 * @return message
-	 */
-	@GetMapping("/JNDIcommitAndRollback")
-	public String jndiCommitAndRollback() {
-
-		jeeTran.exampleJEEUserCommitAndRollback();
-		return "Greetings from com.ibm.cicsdev.springboot.transaction servlet jeeCommitAndRollback";
-	}
-	
-	
-	
-	
+	@GetMapping({"/JEErollback", "/jeerollback"})
+	public String javaEErollback() 
+	{
+		return this.jeeTran.writeTSQ("rollback from javaEERollback()");		
+	}	
 }

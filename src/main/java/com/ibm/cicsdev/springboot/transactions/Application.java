@@ -1,8 +1,3 @@
-package com.ibm.cicsdev.springboot.transactions;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 /* Licensed Materials - Property of IBM                                   */
 /*                                                                        */
 /* SAMPLE                                                                 */
@@ -11,19 +6,25 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /*                                                                        */
 /* US Government Users Restricted Rights - Use, duplication or disclosure */
 /* restricted by GSA ADP Schedule Contract with IBM Corp                  */
-/*                                                                        */
-/**
- * Application
- *
- */
-@SpringBootApplication
-public class Application {
 
+package com.ibm.cicsdev.springboot.transactions;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+/** Standard boilerplate Spring Boot Application Class */
+@SpringBootApplication
+public class Application 
+{
+	
+	/** Name of the TSQ used throughout this Sample */
+	public static final String TSQNAME = "EXAMPLE";
+	
 	/**
-	 * @param args
+	 * @param args - inputs
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		SpringApplication.run(Application.class, args);
 	}
-
 }
