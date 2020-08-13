@@ -1,16 +1,12 @@
 # cics-java-liberty-springboot-transactions
 
-This sample project demonstrates how you can write a Spring Boot application to integrate with CICS transactions when you deploy it to a Liberty JVM server.  The application uses a web browser front end, the web request then uses Java™ Transaction API (JTA) that manages a simple CICS write to a CICS TSQ using a UserTransaction context.
+This sample project demonstrates how a Spring Boot application deployed to a Liberty JVM server, can use different techniques to integrate with CICS transactions. The application uses a web browser front end and makes use of the Java™ Transaction API (JTA). The three techniques demonstrated are: Java EE User Transaction, Spring's `@Transactional` annotation, and the Spring Transaction Template. 
 
-Java™ Transaction API (JTA) is described in the [IBM Java™ Transaction API (JTA)](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.4.0/applications/developing/java/dfhpj2_jta.html)
+The Java™ Transaction API (JTA) is described in the [IBM Java™ Transaction API (JTA)](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.4.0/applications/developing/java/dfhpj2_jta.html)
 
-The sample also demonstrates how to use a Spring Boot `@Transactional` annotation to manage transactions instead of using Java™ Transaction API (JTA) directly.  
+For more information on `@Transactional` and Spring Transaction Templates see [Spring Transaction Management](https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/transaction.html)
 
-Information on [@Transactional](https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/transaction.html)
-
-The built war file from this project is deployed into CICS via a CICS Bundle Project.
-
-For more information, see blog post - link TBC.
+The artifact built from this project is a WAR file that can be deployed into CICS Liberty in a variety of ways from a direct <application> entry in server.xml, to a CICS bundle project. For more information, see **Deploying**.
 
 ## Prerequisites
 
@@ -20,7 +16,7 @@ For more information, see blog post - link TBC.
 - Java SE 1.8 on the workstation
 - An Eclipse development environment on the workstation (optional)
 - Either Gradle or Apache Maven on the workstation (optional if using Wrappers)
-- A TSModel with Recovery ON for TSQ EXAMPLE
+- A TSModel with Recovery ON for the TSQ called `EXAMPLE`.
 
 ## Downloading
 
@@ -109,17 +105,19 @@ This creates a WAR file inside the `target` directory.
 
 ## Deploying
 
-1. Ensure you have the following feature in `server.xml`:
+Ensure you have the `jsp-2.3` feature (which itself contains `servlet`) configured in `server.xml`:
 
-    - jsp-2.3
-    
-2. Create a CICS bundle project with a Dynamic Web Project include for the built war file.
+Either:    
+1. Create a CICS bundle project and copy the WAR file into it.
+
+2. Add a *Dynamic Web Project include* to the project to point at the local WAR file.
 
 3. Deploy the CICS bundle project to CICS.
 
 4. Enable the JVM server and CICS bundle.
 
-5. Optionally, manually upload the WAR file to zFS and add an <application> configuration element to server.xml:
+Or:
+1. Manually upload the WAR file to zFS and add an `<application>` configuration element to server.xml:
 
 ``` XML
    <application id="cics-java-liberty-springboot-transactions-0.1.0"  
@@ -136,11 +134,18 @@ This creates a WAR file inside the `target` directory.
     
 ## Trying out the sample
 
-1. Find the URL for the application in messages.log e.g. `http://myzos.mycompany.com:32000/cics-java-liberty-springboot-transactions-0.1.0/transactional`. 
-2. Visit the URL from the browser which will demonstrate an @Transactional container managed bean.
-3. The browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction transactional" and the TSQ will have the messages  Writing hello, Writing cics,Writing transaction, Writing onto, Writing next, Writing one, but the transaction request that had "goodbye","error","fred" will not be present on the TSQ, as SpringBoots transaction manager will have rolled back.
-4. Next, try the SpringBoot Bean managed way of managing transactions by visting the url `http://myzos.mycompany.com:32000/cics-java-liberty-springboot-transactions-0.1.0/BMTcommit` and the TSQ will have Example of a BMT commit.  If you try the rollback version of this at `http://myzos.mycompany.com:32000/cics-java-liberty-springboot-transactions-0.1.0/BMTrollback` the transaction is rolled back and nothing is written to the TSQ.
-5. Finally, try the JNDI way by visiting the rollback url e.g `http://myzos.mycompany.com:32000/cics-java-liberty-springboot-transactions-0.1.0/JNDIcommit/`, and the browser will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction servlet jndiCommit" and a message "Example of a JNDIcommit" will be written to the TSQ.  Utilising the rollback version the browser at `http://myzos.mycompany.com:32000/cics-java-liberty-springboot-transactions-0.1.0/JNDIcommitAndRollback/`  will respond with the message "Greetings from com.ibm.cicsdev.springboot.transaction servlet jndiCommitAndRollback" and the TSQ will have the message "Example of a [JNDI]commit before rollback", but the message "This will be rolled back" will not be present on the TSQ as this is rolled back by the Java™ Transaction API (JTA) manager.          
+1. With the application installed, the root URL for the sample application can be found in messages.log e.g. `http://myzos.mycompany.com:32000/cics-java-liberty-springboot-transactions-0.1.0/`.
+
+2. Visit the URL from the browser to review the 'Usage' guide.
+
+3. To demonstrate the `@Transactional` container managed transaction, drive the `/transactionalCommit` end-point. You should see *hello CICS from transactionalCommit()* at the browser and a corresponding entry in the TSQ 'EXAMPLE'. You can browse the contents of the TSQ using the CEBR transaction in CICS.
+
+4. Now try the same TSQ write operation `/transactionalRollback`. This time the application is designed to write to the TSQ then throw an exception causing Spring Boot to rollback the transaction. If you have not installed a TSmodel to make your `EXAMPLE` TSQ recoverable, you will see a second entry in the TSQ! If you have already made the TSQ recoverable then there should be no such entry due to rollback of the CICS UOW.
+
+5. Next, try the *Spring Transaction Template* and *Java EE User Transaction* demos at `/STcommit` and `/JEEcommit` respectively. Along with their rollback counterparts `/STrollback` and `/JEErollback`. 
+
+6. For confirmation of the behaviour, you can run the sample before your TSQ is designated as recoverable (through a TSmodel) and again afterwards. Observe how the entries to the TSQ are either committed, or written - then rolled back.
+
 
 ## License
 This project is licensed under [Apache License Version 2.0](LICENSE). 
