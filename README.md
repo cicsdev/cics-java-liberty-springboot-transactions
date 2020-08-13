@@ -1,10 +1,10 @@
-jsp-2.3# cics-java-liberty-springboot-transactions
+# cics-java-liberty-springboot-transactions
 
-This sample project demonstrates how you can write a Spring Boot application to integrate with IBM CICS transactions when you deploy it to a Liberty JVM server.  The application uses a web browser front end, the web request then uses Java™ Transaction API (JTA) that manages a simple CICS write to a CICS TSQ using a UserTransaction context.
+This sample project demonstrates how you can write a Spring Boot application to integrate with CICS transactions when you deploy it to a Liberty JVM server.  The application uses a web browser front end, the web request then uses Java™ Transaction API (JTA) that manages a simple CICS write to a CICS TSQ using a UserTransaction context.
 
 Java™ Transaction API (JTA) is described in the [IBM Java™ Transaction API (JTA)](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.4.0/applications/developing/java/dfhpj2_jta.html)
 
-The sample also demonstrates how to use a Spring Boot @Transactional annotation to manage transactions instead of using Java™ Transaction API (JTA) directly.  
+The sample also demonstrates how to use a Spring Boot `@Transactional` annotation to manage transactions instead of using Java™ Transaction API (JTA) directly.  
 
 Information on [@Transactional](https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/transaction.html)
 
@@ -40,7 +40,7 @@ Gradle (build.gradle):
 
 Maven (POM.xml):
 
-``` xml	
+```xml	
 <dependencyManagement>
     <dependencies>
       <dependency>
