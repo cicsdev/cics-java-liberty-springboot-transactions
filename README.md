@@ -16,7 +16,7 @@ The artifact built from this project is a WAR file that can be deployed into CIC
 - Java SE 1.8 on the workstation
 - An Eclipse development environment on the workstation (optional)
 - Either Gradle or Apache Maven on the workstation (optional if using Wrappers)
-- A TSModel with Recovery ON for the TSQ called `EXAMPLE`.
+- A CICS TSMODEL resource with the attribute `Recovery(ON)` for the TSQ called `EXAMPLE`.
 
 ## Downloading
 
@@ -119,7 +119,7 @@ Either:
 Or:
 1. Manually upload the WAR file to zFS and add an `<application>` configuration element to server.xml:
 
-``` XML
+```xml
    <application id="cics-java-liberty-springboot-transactions-0.1.0"  
      location="${server.config.dir}/springapps/cics-java-liberty-springboot-transactions-0.1.0.war"  
      name="cics-java-liberty-springboot-transactions-0.1.0" type="war">
@@ -140,13 +140,15 @@ Or:
 
 3. To demonstrate the `@Transactional` container managed transaction, drive the `/transactionalCommit` end-point. You should see *hello CICS from transactionalCommit()* at the browser and a corresponding entry in the TSQ 'EXAMPLE'. You can browse the contents of the TSQ using the CEBR transaction in CICS.
 
-4. Now try the same TSQ write operation `/transactionalRollback`. This time the application is designed to write to the TSQ then throw an exception causing Spring Boot to rollback the transaction. If you have not installed a TSmodel to make your `EXAMPLE` TSQ recoverable, you will see a second entry in the TSQ! If you have already made the TSQ recoverable then there should be no such entry due to rollback of the CICS UOW.
+4. Now try the same TSQ write operation `/transactionalRollback`. This time the application is designed to write to the TSQ then throw an exception causing Spring Boot to rollback the transaction. If you have not installed a TSMODEL resource to make the EXAMPLE TSQ recoverable, you will see a second entry in the TSQ! If you have already made the TSQ recoverable then there should be no such entry due to rollback of the CICS UOW.
 
 5. Next, try the *Spring Transaction Template* and *Java EE User Transaction* demos at `/STcommit` and `/JEEcommit` respectively. Along with their rollback counterparts `/STrollback` and `/JEErollback`. 
 
-6. For confirmation of the behaviour, you can run the sample before your TSQ is designated as recoverable (through a TSmodel) and again afterwards. Observe how the entries to the TSQ are either committed, or written - then rolled back.
+6. For confirmation of the behaviour, you can run the sample before your TSQ is designated as recoverable (through a TSMODEL) and again afterwards. Observe how the entries to the TSQ are either committed, or written - then rolled back.
+
 
 
 ## License
-This project is licensed under [Apache License Version 2.0](LICENSE). 
+This project is licensed under [Eclipse Public License - v 2.0](LICENSE). 
+
 
