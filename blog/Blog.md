@@ -10,7 +10,7 @@ Transaction management can be used to coordinate updates across multiple XA reso
 
 ### Learning objectives
 
-In this tutorial we will use a recoverable TSQ to demonstrate the principles of transaction coordination, we'll learn different ways of transactionally managing Spring Boot applications in a CICS Liberty JVM server, and we'll show how to build the application through Gradle or Maven giving access to various transaction APIs.
+In this tutorial we will use a recoverable TSQ to demonstrate the principles of transaction coordination, we'll learn different ways of transactionally managing Spring Boot applications in a CICS Liberty JVM server, and we'll show how to build the application through Gradle or Maven giving access to the various transaction APIs.
 
 
 The following steps give an overview of the objectives:
@@ -56,7 +56,7 @@ You can develop the code by following this tutorial step-by-step, or by download
 
 If you are following step-by-step, generate and download a Spring Boot web application using the Spring initializr website tool. For further details on how to do this, and how to deploy bundles to CICS, see this tutorial - [spring-boot-java-applications-for-cics-part-1-jcics-maven-gradle](https://developer.ibm.com/technologies/java/tutorials/spring-boot-java-applications-for-cics-part-1-jcics-maven-gradle). We use Eclipse as our preferred IDE.
 
-Once your newly generated project has been imported into your IDE, you should have the Application.java and ServletInitializer.java classes which provide the basic framework of a Spring Boot web application. Add the TransactionController.java class snippet as seen below. This class is used as the central coordinator for all the REST requests from your browser. Later we will adapt and extend it to drive the different transactional approaches, but for now it's just a simple text response to the root REST request.
+Once your newly generated project has been imported into your IDE, you should have the Application.java and ServletInitializer.java classes which provide the basic framework of a Spring Boot web application. Add the TransactionController.java class as seen below. This class is used as the central coordinator for all the REST requests from your browser. Later we will adapt and extend it to drive the different transactional approaches, but for now it's just a simple text response to the root REST request.
 
 
 ![Starting Application](graphics/StartApplication.png)
@@ -86,78 +86,78 @@ Using that knowledge you should now be in a position to enhance the *build.gradl
 
 For Gradle, your build file should have the following dependencies.
 
-    '''Gradle
-	dependencies
-	{
-      implementation ("org.springframework.boot:spring-boot-starter-web")
+```Gradle
+dependencies
+{
+    implementation ("org.springframework.boot:spring-boot-starter-web")
     
-      // For JTA Bean managed transactions (this is newer and covers up to jta-1.3)
-      implementation ("javax.transaction:javax.transaction-api")
+    // For JTA Bean managed transactions (this is newer and covers up to jta-1.3)
+    implementation ("javax.transaction:javax.transaction-api")
     
-      // For the @Transactional annotation
-      implementation ("org.springframework:spring-tx")
+    // For the @Transactional annotation
+    implementation ("org.springframework:spring-tx")
     
-      // Don't include TomCat in the runtime build
-      providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+    // Don't include TomCat in the runtime build
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     
-      // CICS BOM (as of May 2020)
-      compileOnly enforcedPlatform('com.ibm.cics:com.ibm.cics.ts.bom:5.5-20200519131930-PH25409')
+    // CICS BOM (as of May 2020)
+    compileOnly enforcedPlatform('com.ibm.cics:com.ibm.cics.ts.bom:5.5-20200519131930-PH25409')
     
-      // Don't include JCICS in the final build (no need for version because we have BOM)
-      compileOnly("com.ibm.cics:com.ibm.cics.server")              
-    }
-	'''
+    // Don't include JCICS in the final build (no need for version because we have BOM)
+    compileOnly("com.ibm.cics:com.ibm.cics.server")              
+}
+```
 
 For Maven, you'll need the following dependencies in your pom.xml
 
-    '''XML
-    <!-- CICS BOM (as of May 2020) -->
-    <dependencyManagement>
-      <dependencies>
-        <dependency>
-          <groupId>com.ibm.cics</groupId>
-          <artifactId>com.ibm.cics.ts.bom</artifactId>
-          <version>5.5-20200519131930-PH25409</version>
-          <type>pom</type>
-          <scope>import</scope>
-        </dependency>
-      </dependencies>
-    </dependencyManagement>
+```XML
+<!-- CICS BOM (as of May 2020) -->
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>com.ibm.cics</groupId>
+      <artifactId>com.ibm.cics.ts.bom</artifactId>
+      <version>5.5-20200519131930-PH25409</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
   
-    <dependencies>      
-      <!-- Compile against, but don't include JCICS in the final build (version and scope are from BOM) -->
-      <dependency>
-        <groupId>com.ibm.cics</groupId>
-        <artifactId>com.ibm.cics.server</artifactId>
-      </dependency>
+<dependencies>      
+  <!-- Compile against, but don't include JCICS in the final build (version and scope are from BOM) -->
+  <dependency>
+    <groupId>com.ibm.cics</groupId>
+    <artifactId>com.ibm.cics.server</artifactId>
+  </dependency>
     
-      <!-- Spring-transactions -->
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-tx</artifactId>
-      </dependency>
+  <!-- Spring-transactions -->
+  <dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-tx</artifactId>
+  </dependency>
     
-      <!-- Spring Boot web support -->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-      </dependency>
+  <!-- Spring Boot web support -->
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+  </dependency>
 				
-      <!-- javax.transaction API -->
-      <dependency>
-        <groupId>javax.transaction</groupId>
-        <artifactId>javax.transaction-api</artifactId>
-      </dependency>
+  <!-- javax.transaction API -->
+  <dependency>
+    <groupId>javax.transaction</groupId>
+    <artifactId>javax.transaction-api</artifactId>
+  </dependency>
     
-      <!-- Compile against, but don't include TomCat in the runtime build -->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-tomcat</artifactId>
-        <scope>provided</scope>
-      </dependency>
+  <!-- Compile against, but don't include TomCat in the runtime build -->
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-tomcat</artifactId>
+    <scope>provided</scope>
+  </dependency>
     
-    </dependencies>
-	'''
+</dependencies>
+```
 
 
 Running the build tool of choice should produce a WAR file ready to deploy. When the time comes (see later), you can deploy it in a CICS bundle, or directly as an WAR <application> element in the Liberty server.xml.
@@ -194,55 +194,55 @@ Note that by default Spring Framework's transaction infrastructure only marks a 
 
 Cut and Paste code -
 
-	```java
-    package com.ibm.cicsdev.springboot.transactions;
+```java
+package com.ibm.cicsdev.springboot.transactions;
     
-    import org.springframework.stereotype.Component;
-    import org.springframework.transaction.annotation.Transactional;
-    import com.ibm.cics.server.CicsConditionException;
-    import com.ibm.cics.server.TSQ;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import com.ibm.cics.server.CicsConditionException;
+import com.ibm.cics.server.TSQ;
     
+/**
+ * This component uses @Transactional to manage transactions in
+ * a container oriented manner.
+ */
+@Component
+public class SpringTransactional 
+{
     /**
-     * This component uses @Transactional to manage transactions in
-     * a container oriented manner.
+     * Write an input string to a CICS TSQ using the @Transactional annotation. 
+     * If the input text contains 'rollback' then generate a RuntimeException
+     * which triggers rollback.
+     * 
+     * @param text
+     * @return status message
+     * @throws CicsConditionException 
      */
-    @Component
-    public class SpringTransactional 
+    @Transactional (rollbackFor=Exception.class)
+    public String writeTSQ(String text) throws CicsConditionException 
     {
-       /**
-        * Write an input string to a CICS TSQ using the @Transactional annotation. 
-        * If the input text contains 'rollback' then generate a RuntimeException
-        * which triggers rollback.
-        * 
-        * @param text
-        * @return status message
-        * @throws CicsConditionException 
-        */
-        @Transactional (rollbackFor=Exception.class)
-        public String writeTSQ(String text) throws CicsConditionException 
+        // Create JCICS representation of TSQ object
+        TSQ tsq = new TSQ();
+        tsq.setName(Application.TSQNAME);
+    
+        // Write it to the TSQ
+        tsq.writeString(text);
+    
+        // If the string contains 'rollback' then throw an exception to trigger rollback
+        if (text.contains("rollback")) 
         {
-            // Create JCICS representation of TSQ object
-            TSQ tsq = new TSQ();
-            tsq.setName(Application.TSQNAME);
+            throw new RuntimeException("SpringTransactional.writeTSQ(): Rollback request was detected"); 
+        }	
     
-            // Write it to the TSQ
-            tsq.writeString(text);
-    
-            // If the string contains 'rollback' then throw an exception to trigger rollback
-            if (text.contains("rollback")) 
-            {
-                throw new RuntimeException("SpringTransactional.writeTSQ(): Rollback request was detected"); 
-            }	
-    
-            return text;
-        }
+        return text;
     }
-    ```
+}
+```
 
-To use this we need to update our TransactionController.java class with a new method and 'autowire' in an instance of the above SpringTransactional class.
+To use the SpringTransactional class we need to update our TransactionController.java with a new method to 'autowire' in an instance of the SpringTransactional class and then to drive it in response to a web request.
 
-	```java
-	@Autowired SpringTransactional transactional;
+```java
+    @Autowired SpringTransactional transactional;
 	
 	/**
      * Demonstrate Transactional annotation commit
@@ -262,17 +262,18 @@ To use this we need to update our TransactionController.java class with a new me
             return "transactionalCommit: exception: "  + e.getMessage() + ". Check dfhjvmerr for further details.";
         }       
     }
-	```
+```
 
-If we run the servlet using the root URL as before but with the post-fix `/transactionalCommit`, you should see the web browser return "hello CICS from transactionalCommit()". Browsing the CICS TSQ using `CEBR EXAMPLE` should show the same value written as a string to the TSQ.
+You can now run the request using the root URL with the post-fix `/transactionalCommit`. You should see the web browser return "hello CICS from transactionalCommit()". Browsing the CICS TSQ using `CEBR EXAMPLE` should show the same value written as a string to the TSQ.
 
 
+TODO: UPDATE THIS SCREENSHOT
 ![TransactionalTSQ](graphics/TransactionalTSQ.png)
 
 
-Now let's add a complementary rollback endpoint which calls the same SpringTransactional class, but this time with 'rollback' in the message. Paste the following into TransactionController.java.
+Now let's add a second end-point which calls the same SpringTransactional class, but this time with 'rollback' in the message. Paste the following into TransactionController.java.
 
-    ```java
+```java
     /**
      * Demonstrate Transactional annotation rollback
      * @return status message
@@ -294,7 +295,8 @@ Now let's add a complementary rollback endpoint which calls the same SpringTrans
             return "transactionalRollback: exception: "  + e.getMessage() + ". Rollback triggered - see dfhjvmerr for further details.";
         }       
     }
-    ```
+```
+
 This time if you use your browser to request the `/transactionalRollback` end-point you will be informed that an Exception occurred and that rollback was driven. If you browse the TSQ again...what do you see? A second entry? ..but wasn't it supposed to rollback the write? Well yes, but of course we haven't yet installed the TSMODEL definition into CICS in order to designate the TSQ as recoverable. You could go ahead and do that now if you wish (although you may wish to hold off doing so yet). Use CEBR to PURGE (delete) the TSQ so that the TSMODEL will subsequently take effect, run the two browser requests again and observe that only one of the TSQ entries is preserved. 
 
 If you do hold off installing the TSMODEL however, you can run the rest of this tutorial proving that code is executed and that TSQ entries are written, then install the TSMODEL, purge the TSQ, re-run the examples and observe the differences when rollback takes effect.
@@ -343,91 +345,91 @@ Let's create our new class 'SpringTransactionTemplate.java' which includes the c
 
 Cut and Paste
 
-	```java
-    package com.ibm.cicsdev.springboot.transactions;
+```java
+package com.ibm.cicsdev.springboot.transactions;
     
-    import org.springframework.beans.factory.annotation.Autowired;
-    import org.springframework.stereotype.Component;
-    import org.springframework.transaction.PlatformTransactionManager;
-    import org.springframework.transaction.TransactionDefinition;
-    import org.springframework.transaction.TransactionStatus;
-    import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-    import org.springframework.transaction.support.TransactionTemplate;
-    
-    import com.ibm.cics.server.CicsConditionException;
-    import com.ibm.cics.server.TSQ;
-    
-    
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
+
+import com.ibm.cics.server.CicsConditionException;
+import com.ibm.cics.server.TSQ;
+
+
+/**
+ * This component demonstrates use of the Spring PlatformTransactionManager 
+ * and TransactionTemplate to manage transactions in a Bean orientated 
+ * manner.
+ */
+@Component
+public class SpringTransactionTemplate 
+{   
+    @Autowired
+    private PlatformTransactionManager transactionManager;
+
+
     /**
-     * This component demonstrates use of the Spring PlatformTransactionManager 
-     * and TransactionTemplate to manage transactions in a Bean orientated 
-     * manner.
+     * @param text
+     * @return status message
      */
-    @Component
-    public class SpringTransactionTemplate 
+    public String writeTSQ(String text) 
     {   
-        @Autowired
-        private PlatformTransactionManager transactionManager;
+        // Create transaction template
+        TransactionTemplate tranTemplate = new TransactionTemplate(this.transactionManager);
+        tranTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
     
-    
-        /**
-         * @param text
-         * @return status message
-         */
-        public String writeTSQ(String text) 
-        {   
-            // Create transaction template
-            TransactionTemplate tranTemplate = new TransactionTemplate(this.transactionManager);
-            tranTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-        
-            // Execute the method to do the CICS update
-            tranTemplate.execute(new TransactionCallbackWithoutResult() 
-            {       
-                @Override
-                protected void doInTransactionWithoutResult(TransactionStatus status) 
-                {               
-                    if (status.isNewTransaction()) 
-                    {
-                        System.out.println("SpringTransactionTemplate.writeTSQ(): Starting new transaction");                   
-                    }           
-                            
-                    // Force a rollback if the input matches a specific string 
-                    if (text.contains("rollback")) 
-                    {
-                        status.setRollbackOnly();                   
-                    }
-                
-                    // Create JCICS TSQ object
-                    TSQ tsq = new TSQ();
-                    tsq.setName(Application.TSQNAME);
-                
-                    // Write the string to the TSQ 
-                    try 
-                    {                   
-                        tsq.writeString(text);                                  
-                    } 
-                    catch (CicsConditionException e) 
-                    {               
-                        // If JCICS command fails 
-                        // then force a rollback of the transaction (which rolls back the CICS UOW)
-                        System.out.println("SpringTransactionTemplate.writeTSQ(): " + e.getMessage() +  ". Unexpected exception,    rollback");
-                        status.setRollbackOnly();
-                        e.printStackTrace();
-                    }                                   
+        // Execute the method to do the CICS update
+        tranTemplate.execute(new TransactionCallbackWithoutResult() 
+        {       
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) 
+            {               
+                if (status.isNewTransaction()) 
+                {
+                    System.out.println("SpringTransactionTemplate.writeTSQ(): Starting new transaction");                   
+                }           
+                        
+                // Force a rollback if the input matches a specific string 
+                if (text.contains("rollback")) 
+                {
+                    status.setRollbackOnly();                   
                 }
-            });
-        
-            return text;
-        }        
-    }
-	```
+            
+                // Create JCICS TSQ object
+                TSQ tsq = new TSQ();
+                tsq.setName(Application.TSQNAME);
+            
+                // Write the string to the TSQ 
+                try 
+                {                   
+                    tsq.writeString(text);                                  
+                } 
+                catch (CicsConditionException e) 
+                {               
+                    // If JCICS command fails 
+                    // then force a rollback of the transaction (which rolls back the CICS UOW)
+                    System.out.println("SpringTransactionTemplate.writeTSQ(): " + e.getMessage() +  ". Unexpected exception,    rollback");
+                    status.setRollbackOnly();
+                    e.printStackTrace();
+                }                                   
+            }
+        });
+    
+        return text;
+    }        
+}
+```
 
 To use this bean, we need to add some more code to our TransactionController to autowire in the SpringTransactionTemplate and to call our bean. Two methods are added, one will force a rollback, and the other a commit.
 
 
 Cut and Paste Code into TransactionController.java
 
-	```java
+```java
     @Autowired SpringTransactionTemplate springTemplateTran;
 	
 	/**
@@ -450,7 +452,7 @@ Cut and Paste Code into TransactionController.java
     {
         return this.springTemplateTran.writeTSQ("rollback from springTemplateRollback()");
     }
-	```
+```
 
 
 Go ahead and use Gradle or Maven to rebuild you project now. If you are deploying through a CICS bundle project, copy and paste the generated WAR over the previous version of the WAR in the CICS bundle project, and redeploy the project to zFS. Once the project is uploaded, disable and re-enable the CICS bundle. If you chose to deploy with an `<application...>` element and have `<applicationMonitoring...>` active, when you upload a new version of the WAR, Liberty will stop the application and restart it at the new version - otherwise you can restart the server to pick-up changes.
@@ -484,86 +486,84 @@ To see a UserTransaction in action, let's create a new class called JEEUserTrans
 Cut and Paste Code
 
 ```java
-    package com.ibm.cicsdev.springboot.transactions;
+package com.ibm.cicsdev.springboot.transactions;
 
-    import javax.naming.InitialContext;
-    import javax.naming.NamingException;
-    import javax.transaction.UserTransaction;
-    import org.springframework.stereotype.Component;
-    import com.ibm.cics.server.TSQ;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.transaction.UserTransaction;
+import org.springframework.stereotype.Component;
+import com.ibm.cics.server.TSQ;
+
+/**
+ * This class demonstrates the use of JNDI to look up a Java EE User Transaction context.
+ * It then uses the Java Transaction API (JTA) and Liberty's transaction manager to create 
+ * and manage work within a global transaction - to which a CICS UOW is subordinate.
+ */
+@Component
+public class JEEUserTransaction 
+{   
     
-    /**
-     * This class demonstrates the use of JNDI to look up a Java EE User Transaction context.
-     * It then uses the Java Transaction API (JTA) and Liberty's transaction manager to create 
-     * and manage work within a global transaction - to which a CICS UOW is subordinate.
+    /** 
+     * write to a TSQ from within a Java EE UserTransaction 
+     * 
+     * @param text 
+     * @return status message
      */
-    @Component
-    public class JEEUserTransaction 
-    {   
-        
-        /** 
-         * write to a TSQ from within a Java EE UserTransaction 
-         * 
-         * @param text 
-         * @return status message
-         */
-        public String writeTSQ(String text) 
-        {
-            // Look up the Java EE transaction context from JNDI 
-            UserTransaction tranContext = lookupContext();          
-    
-            // Write a message to the TSQ
-            try 
-            {
-                // Create a JCICS TSQ object
-                TSQ tsq = new TSQ();
-                tsq.setName(Application.TSQNAME);
-    
-                // Start a user transaction, write a simple phrase
-                // to the queue and then commit or rollback.
-                tranContext.begin();
-                
-                tsq.writeString(text);          
-                if(text.contains("rollback"))
-                {
-                    tranContext.rollback();
-                    return "JEEUserTransaction.writeTSQ(): TSQ written then 'rollback' issued";
-                }
-                
-                tranContext.commit();
-                return "JEEUserTransaction.writeTSQ(): TSQ written then 'commit' issued";                   
-            } 
-            catch (Exception e) 
-            {           
-                e.printStackTrace();
-                return "JEEUserTransaction.writeTSQ(): unexpected exception: "  + e.getMessage() + ". Check dfhjvmerr for further       details.";
-            }
-        }
-    
-        
-        private UserTransaction lookupContext() 
-        {       
-            // Use JNDI to find the Java EE (Liberty) transaction manager
-            InitialContext ctx;     
-            UserTransaction tran = null;
-            try 
-            {
-                ctx = new InitialContext();
-                tran = (UserTransaction) ctx.lookup("java:comp/UserTransaction");    
-            }
-            catch (NamingException e) 
-            {
-                e.printStackTrace();
-                System.out.println("JEEUserTransaction.lookupContext(): lookup failed: " + e.getMessage());
-            }
+    public String writeTSQ(String text) 
+    {
+        // Look up the Java EE transaction context from JNDI 
+        UserTransaction tranContext = lookupContext();          
 
-            // return the UserTransaction context
-            return tran;
+        // Write a message to the TSQ
+        try 
+        {
+            // Create a JCICS TSQ object
+            TSQ tsq = new TSQ();
+            tsq.setName(Application.TSQNAME);
+
+            // Start a user transaction, write a simple phrase
+            // to the queue and then commit or rollback.
+            tranContext.begin();
+            
+            tsq.writeString(text);          
+            if(text.contains("rollback"))
+            {
+                tranContext.rollback();
+                return "JEEUserTransaction.writeTSQ(): TSQ written then 'rollback' issued";
+            }
+            
+            tranContext.commit();
+            return "JEEUserTransaction.writeTSQ(): TSQ written then 'commit' issued";                   
+        } 
+        catch (Exception e) 
+        {           
+            e.printStackTrace();
+            return "JEEUserTransaction.writeTSQ(): unexpected exception: "  + e.getMessage() + ". Check dfhjvmerr for further       details.";
         }
     }
+
+    
+    private UserTransaction lookupContext() 
+    {       
+        // Use JNDI to find the Java EE (Liberty) transaction manager
+        InitialContext ctx;     
+        UserTransaction tran = null;
+        try 
+        {
+            ctx = new InitialContext();
+            tran = (UserTransaction) ctx.lookup("java:comp/UserTransaction");    
+        }
+        catch (NamingException e) 
+        {
+            e.printStackTrace();
+            System.out.println("JEEUserTransaction.lookupContext(): lookup failed: " + e.getMessage());
+        }
+
+        // return the UserTransaction context
+        return tran;
+    }
+}
 ```
-
-
 
 To use this new class we autowire it into our TransactionController and add two new methods to commit and rollback demonstrations.
 
