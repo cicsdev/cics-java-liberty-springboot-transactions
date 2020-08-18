@@ -166,12 +166,9 @@ Running the build tool of choice should produce a WAR file ready to deploy. When
 
 ### Liberty configuration
 
-TODO: merge this into build/deploy section 2
+If you don't yet have a Liberty JVM server configured, using CICS auto-configuration is a great way to start. If you enable auto-configuration in the JVM profile, it will generate a basic server.xml when the JVM server is enabled. For more information, see Configuring a Liberty JVM server in the [CICS Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSGMCP_5.6.0/configuring/java/config_jvmserver_liberty.html).
 
-If you don't yet have a Liberty JVM server configured, using CICS auto-configuration is a great way to start. If you enable auto-configuration in the JVM profile, it will generate a basic server.xml when the JVM server is enabled. For more information, see Configuring a Liberty JVM server in the CICS Knowledge Center.
-
-If you're customising an existing configuration, you'll need to make sure you include the following feature:
-jsp-2.3. Also the `httpPort` should be configured to a port available on your system. By default it uses 9080 - ensure you choose a unique value.
+If you're customising an existing configuration, you'll need to make sure you include the `jsp-2.3` Liberty feature in the `server.xml`. Also the `httpPort` should be configured to a port available on your system. By default it uses 9080 - ensure you choose a unique value.
 
 With the JVM server and the application successfully deployed. In your Liberty server's messages.log you should see these messages.
 
@@ -263,7 +260,6 @@ In this example we write text to the CICS TSQ using the `TSQ` method `writeStrin
 > Note: By default the Spring framework transaction infrastructure only marks a transaction for rollback if it detects an unchecked exception. JCICS exceptions, such as a `CICSConditionException` are checked. In order to rollback for all exceptions (including the CICS checked exceptions) we can override the default behaviour with an explicit setting on the annotation as shown: `@Transactional(rollbackFor=Exception.class)`.
 
 
-
 To use our `SpringTransactional` class we need to update our `TransactionController.java` with a new method to *autowire* in an instance of the `SpringTransactional` class and then to drive it in response to a web request. Add the following code into your `TransactionController.java` class which will map requests to the `/transactionalCommit` URL to the `SpringTransactional` method `writeTSQ()`.
 
 ```java
@@ -330,7 +326,6 @@ If you do hold off installing the TSMODEL, you can run the rest of this tutorial
 
 
 ## Step 5 : Spring's TransactionTemplate for Bean Managed Transactions
-
 
 We will now create a class to use Spring's `TransactionTemplate` interface for a Bean Managed Transaction. This will use Spring Boot's programmatic approach to managing transactions. The following snippet shows Spring's `PlatformTransactionManager` and `TransactionTemplate` classes being set-up and called ready to take the contents of our transactional code.
 
@@ -472,18 +467,17 @@ To use this bean, we need to add some more code to our `TransactionController` t
     }
 ```
 
-TODO: does this deploy information need to be earlier in Section #2????
-Go ahead and use Gradle or Maven to rebuild you project now. If you are deploying through a CICS bundle project, copy and paste the generated WAR over the previous version of the WAR in the CICS bundle project, and redeploy the project to zFS. Once the project is uploaded, disable and re-enable the CICS bundle. If you chose to deploy with an `<application...>` element and have `<applicationMonitoring...>` active, when you upload a new version of the WAR, Liberty will stop the application and restart it at the new version - otherwise you can restart the server to pick-up changes.
+Go ahead and use Gradle or Maven to rebuild you project now. If you are deploying through a CICS bundle project, update the generated CICS bundle project in zFS and then disable and re-enable the CICS bundle. If you chose to deploy with an `<application...>` element and have `<applicationMonitoring...>` active, when you upload a new version of the WAR, Liberty will stop the application and restart it at the new version, otherwise you can restart the server to pick-up changes.
 
 To drive our two new methods, use a browser as before, but this time request the new `/STcommit` and `/STrollback` end-points. You will be greeted by each request, and the TSQ called 'EXAMPLE' will be updated.
 
 
-##Step 6 : Java EE UserTransaction approach to Bean Managed Transactions
+## Step 6 : Java EE UserTransaction approach to Bean Managed Transactions
 
 
 In this final part of the tutorial we demonstrate how to use Liberty's Transaction manager directly from a Spring Boot application. This can be achieved by looking up the Java EE `java:comp/UserTransaction` context through JNDI and creating a `UserTransaction` object to perform a Bean Managed Transactions.
 
-###JTA in a CICS Liberty JVM server
+### JTA in a CICS Liberty JVM server
 
 In CICS, there is an implicit UOW for every task, so transaction management does not need to be explicitly started. For JTA however, a Container Managed Transaction (CMT) annotation is required on a class or method, or a UserTransaction must be coded with the begin() method. A JTA transaction completes at the end of the annotation scope for CMT, or for a `UserTransaction` if the application reaches a U`serTransaction.commit()` or `rollback()`. If no commit or rollback is coded, the Liberty web-container will complete the transaction when the web request terminates.
 
