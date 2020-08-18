@@ -482,7 +482,7 @@ In this final part of the tutorial we demonstrate how to use Liberty's Transacti
 
 ### JTA in a CICS Liberty JVM server
 
-In CICS, there is an implicit UOW for every task, so transaction management does not need to be explicitly started. For JTA however, a Container Managed Transaction (CMT) annotation is required on a class or method, or a UserTransaction must be coded with the `begin()` method. A JTA transaction completes at the end of the annotation scope for CMT, or for a `UserTransaction` if the application reaches a U`serTransaction.commit()` or `rollback()`. If no commit or rollback is coded, the Liberty web-container will complete the transaction when the web request terminates.
+In CICS, there is an implicit UOW for every task, so transaction management does not need to be explicitly started. For JTA however, a Container Managed Transaction (CMT) annotation is required on a class or method, or a `UserTransaction` must be coded with the `begin()` method. A JTA transaction completes at the end of the annotation scope for CMT, or for a `UserTransaction` if the application reaches a `UserTransaction.commit()` or `rollback()`. If no commit or rollback is coded, the Liberty web-container will complete the transaction when the web request terminates.
 
 To see a UserTransaction in action, let's create a new class called `JEEUserTransaction.java` as shown below.
 
