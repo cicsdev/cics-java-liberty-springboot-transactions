@@ -41,22 +41,10 @@
       <artifactId>com.ibm.cics.server</artifactId>
     </dependency>
     
-    <!-- Spring-transactions -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-tx</artifactId>
-    </dependency>
-    
     <!-- Spring Boot web support -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-				
-    <!-- javax.transaction API -->
-    <dependency>
-      <groupId>javax.transaction</groupId>
-      <artifactId>javax.transaction-api</artifactId>
     </dependency>
 
     <!-- Compile against, but don't include TomCat in the runtime build -->
@@ -65,6 +53,18 @@
       <artifactId>spring-boot-starter-tomcat</artifactId>
       <scope>provided</scope>
     </dependency>
+	  
+    <!-- Spring-transactions -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+    </dependency>
+				
+    <!-- javax.transaction API -->
+    <dependency>
+      <groupId>javax.transaction</groupId>
+      <artifactId>javax.transaction-api</artifactId>
+    </dependency>	  
 
   </dependencies>
 
