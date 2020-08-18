@@ -161,8 +161,7 @@ For Maven, you'll need the following dependencies in your pom.xml
   </dependencies>  
 ```
 
-Running the build tool of your choice should produce a WAR file ready to deploy. When the time comes (see later), you can deploy it in a CICS bundle, or directly as an `<application>` element in the Liberty server.xml. For further details on configuring a Liberty JVM server and deploying the sample to CICS can be found in the Git repository [README](https://github.com/cicsdev/cics-java-liberty-springboot-transaction/README).
-
+Running the build tool of your choice should produce a WAR file ready to deploy. When the time comes (see later), you can deploy it in a CICS bundle, or directly as an `<application>` element in the Liberty server.xml. For further details on configuring a Liberty JVM server and deploying the sample to CICS can be found in the Git repository [README](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/blob/master/README.md)
 
 
 ## Step 3: Create a TSMODEL
