@@ -679,10 +679,6 @@ These are
 - CICSDev blog - [Using Java Transactions in CICS Liberty to coordinate JDBC updates](https://github.com/cicsdev/blog-cics-java-jta-jdbc/blob/master/blog.md)
 
 
-More in depth information for this with JEE can be found in the following CICSDev artcile
-[Using Java Transactions in CICS Liberty to coordinate JDBC updates](https://github.com/cicsdev/blog-cics-java-jta-jdbc)
-
-
 TODO: REMOVE THESE links as not AD related??
 
 IBM Knowledge Center [Deploying a CICS bundle](https://www.ibm.com/support/knowledgecenter/en/SSSQ3W_5.6.0/com.ibm.cics.core.help/topics/tasks/task_deploy_bundle_project.html)
