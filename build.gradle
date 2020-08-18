@@ -31,21 +31,22 @@ repositories
 
 
 dependencies
-{
-    implementation ("org.springframework.boot:spring-boot-starter-web")
-
-    // For JTA Bean managed transactions (this is newer and covers up to jta-1.3)
-    implementation ("javax.transaction:javax.transaction-api")
-
-    // For the @Transactional annotation
-    implementation ("org.springframework:spring-tx")
-
-    // Don't include TomCat in the runtime build, but do put it in WEB-INF so it can be run standalone a well as embedded
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-  
+{    
     // CICS BOM (as of May 2020)
     compileOnly enforcedPlatform('com.ibm.cics:com.ibm.cics.ts.bom:5.5-20200519131930-PH25409')
-      
+    
     // Don't include JCICS in the final build (no need for version because we have BOM)
-    compileOnly("com.ibm.cics:com.ibm.cics.server")              
+    compileOnly("com.ibm.cics:com.ibm.cics.server")   
+    
+    // Spring Boot web support
+    implementation ("org.springframework.boot:spring-boot-starter-web")
+    
+    // Don't include TomCat in the runtime build
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+    
+    // Java Transaction API (this is newer and covers up to jta-1.3)
+    implementation ("javax.transaction:javax.transaction-api")
+    
+    // Spring's Transactional API
+    implementation ("org.springframework:spring-tx")           
 }
