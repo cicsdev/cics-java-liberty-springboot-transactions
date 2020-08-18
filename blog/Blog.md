@@ -24,9 +24,10 @@ The following steps give an overview of the objectives:
 
 5. Use Spring's `TransactionTemplate` interface, this also gives automatic integration with the Liberty transaction manager, but is more similar to EJBs Bean Managed Transactions (BMT).
 
-6. Finally from within the Spring Boot application we will use the Java EE approach of creating *User Transactions* directly from the Liberty transaction manager. This is also a Bean Managed Transaction (BMT) approach.
+6. Use the Java EE approach with the `UserTransaction` interface to directly control the Liberty transaction manager. This is also a Bean Managed Transaction (BMT) approach.
 
-All the techniques discussed integrate Spring Boot with Liberty's transaction manager. If you are running in CICS Liberty then the CICS unit-of-work (UOW) is also automatically integrated with the Liberty transaction, and becomes subordinate to Liberty's global (XA) transaction. The net result is that your Java work and CICS work can be committed or rolled back as one recoverable transaction. For more information CICS UOW support in Liberty see [Using Java Transactions in CICS Liberty to coordinate JDBC updates](https://developer.ibm.com/cics/2017/02/01/using-java-transactions-in-cics-liberty-to-coordinate-jdbc-updates/)
+All the techniques discussed integrate Spring Boot with Liberty's transaction manager. If you are running in CICS Liberty then the CICS unit-of-work (UOW) is also automatically integrated with the Liberty transaction, and becomes subordinate to Liberty's global (XA) transaction. The net result is that your Java work and CICS work can be committed or rolled back as one recoverable transaction. 
+>**Note:** If using any of these JTA based transactional scenarios in CICS you cannot use the JCICS methods `Task.commit()` or `Task.rollback()` which drive a corresponding `EXEC CICS SYNPOINT` or `ROLLBACK`. This is because the CICS recovery manager for the task is subordinate to Liberty's transaction manager and all transactiona coordinatio must be done using JTA. 
 
 The application source and build scripts are available in the associated Git [repository](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/).
 
@@ -51,7 +52,6 @@ It should take you about 1 hour to complete this tutorial.
 
 
 You can develop the code by following this tutorial step-by-step, or by downloading or cloning the [cics-java-liberty-springboot-transactions](https://github.com/cicsdev/cics-java-liberty-springboot-transactions) example in GitHub.
-
 
 If you are following step-by-step, generate and download a Spring Boot web application using the Spring initializr website tool. For further details on how to do this, and how to deploy bundles to CICS, see this tutorial - [spring-boot-java-applications-for-cics-part-1-jcics-maven-gradle](https://developer.ibm.com/technologies/java/tutorials/spring-boot-java-applications-for-cics-part-1-jcics-maven-gradle). We use Eclipse as our preferred IDE.
 
@@ -82,7 +82,7 @@ If you are following step-by-step you can now run this locally as a Java Applica
 
 In the first part of this tutorial series we looked in-depth at how to use Gradle or Maven to build a Spring Boot web application. [Spring Boot Java applications for CICS, Part 1: JCICS, Gradle, and Maven](https://developer.ibm.com/tutorials/spring-boot-java-applications-for-cics-part-1-jcics-maven-gradle/)
 
-Using that knowledge you should now be in a position to enhance the *build.gradle*, or *pom.xml* to include the necessary dependencies to compile against a variety of Transaction APIs. In particular we require the Java Transaction API (JTA) and Spring's Transactional API.
+Using that knowledge you should now be in a position to enhance the *build.gradle*, or *pom.xml* to include the necessary dependencies to compile against a variety of Transaction APIs. In particular we require the libraries that provide the **Java Transaction API (JTA)** and **Spring's Transactional API**.
 
 For Gradle, your build file should have the following dependencies.
 
@@ -161,32 +161,7 @@ For Maven, you'll need the following dependencies in your pom.xml
   </dependencies>  
 ```
 
-Running the build tool of choice should produce a WAR file ready to deploy. When the time comes (see later), you can deploy it in a CICS bundle, or directly as an `<application>` element in the Liberty server.xml.
-
-
-### Liberty configuration
-
-If you don't yet have a Liberty JVM server configured, using CICS auto-configuration is a great way to start. If you enable auto-configuration in the JVM profile, it will generate a basic server.xml when the JVM server is enabled. For more information, see Configuring a Liberty JVM server in the [CICS Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSGMCP_5.6.0/configuring/java/config_jvmserver_liberty.html).
-
-If you're customising an existing configuration, you'll need to make sure you include the `jsp-2.3` Liberty feature in the `server.xml`. Also the `httpPort` should be configured to a port available on your system. By default it uses 9080 - ensure you choose a unique value.
-
-With the JVM server and the application successfully deployed. In your Liberty server's messages.log you should see these messages.
-
-```message
-A CWWKT0016I: Web application available (default_host): http://sysplex2-dvipa33.hursley.ibm.com:9080/com.ibm.cicsdev.springboot.transactions-1.0.0/
-```
-
-Which shows the application initialising and a link to the URL of the application that you can paste into your browser.
-
-
-Further down messages.log Spring should initialise like this:
-
-```message
-O 2019-11-25 15:49:26.475 INFO 84017833 --- [RVICE_Thread-31] c.i.c.s.transactions.ServletInitializer : Started ServletInitializer in 11.432 seconds (JVM running for 31.936)
-```
-
-You can now run a request in to the application in CICS by pasting the link into your web browser.
-
+Running the build tool of your choice should produce a WAR file ready to deploy. When the time comes (see later), you can deploy it in a CICS bundle, or directly as an `<application>` element in the Liberty server.xml. For further details on configuring a Liberty JVM server and deploying the sample to CICS can be found in the Git repository [README](https://github.com/cicsdev/cics-java-liberty-springboot-transaction/README).
 
 
 
@@ -208,7 +183,7 @@ For example:
 So let's update our code to demonstrate Spring Boot's approach to container managed transactions. The `@Transactional` annotation can be used at the class or method level. 
 The advantage of the `@Transactional` annotation over Bean Managed Transactions is that you do not explicitly have to code `begin()` and `commit()` to demark the transaction. Instead you call a class or method that has the `@Transactional` annotation on it. Spring Boot, by virtue of integration with Liberty's transaction manager, then co-ordinates the transaction with both Liberty and the CICS UOW.
 
-So let us create our new class to demonstrate Spring Container Managed Transactions - `SpringTransactional.java`.
+So let us create our new class `SpringTransactional.java` to demonstrate Spring Container Managed Transactions.
 
 ```java
 package com.ibm.cicsdev.springboot.transactions;
@@ -332,9 +307,7 @@ Now let's add a second end-point which calls the same `SpringTransactional` clas
     }
 ```
 
-This time if you use your browser to request the `/transactionalRollback` end-point you will be informed that an Exception occurred and that rollback was driven. If you browse the TSQ again, and see a second entry  this is because we haven't yet installed the TSMODEL definition into CICS in order to designate the TSQ as recoverable. You can go ahead and do that now if you wish (although you may wish to hold off doing so yet). You can use the `CEBR` transaction first to PURGE (delete) the TSQ so that the TSMODEL will subsequently take effect, run the two browser requests again and observe that only one of the TSQ entries is preserved. 
-
-If you do hold off installing the TSMODEL, you can run the rest of this tutorial proving that code is executed and that TSQ entries are written, then install the TSMODEL, purge the TSQ, re-run the examples and observe the differences when rollback takes effect.
+This time if you use your browser to request the `/transactionalRollback` end-point you will be informed that an Exception occurred and that rollback was driven. If you browse the TSQ again, and see a second entry  this is because we haven't yet installed the TSMODEL definition into CICS in order to designate the TSQ as recoverable. If you hold off installing the TSMODEL, you can run the rest of this tutorial proving that code is executed and that TSQ entries are written, then install the TSMODEL, purge the TSQ, re-run the examples and observe the differences when rollback takes effect.
 
 
 
@@ -365,10 +338,7 @@ We will now create a class to use Spring's `TransactionTemplate` interface for a
         ...
 ```
 
-which allows us to programatically rollback via calling the method `status.setRollbackOnly();`
-
-
-For more information about Spring's programmatic transaction management see: [Programmatic transaction management](https://docs.spring.io/spring/docs/3.0.0.M3/reference/html/ch11s06.html)
+This allows us to programatically rollback the transaction by calling the method `status.setRollbackOnly();`
 
 Let's create our new class `SpringTransactionTemplate.java` which includes the code snippets above. As we did for the previous SpringTransactional approach, if the keyword "rollback" is detected in the text of the string, after writing to the TSQ, we will issue a rollback.
 
@@ -480,9 +450,29 @@ To use this bean, we need to add some more code to our `TransactionController` t
     }
 ```
 
-Go ahead and use Gradle or Maven to rebuild you project now. If you are deploying through a CICS bundle project, update the generated CICS bundle project in zFS and then disable and re-enable the CICS bundle. If you chose to deploy with an `<application...>` element and have `<applicationMonitoring...>` active, when you upload a new version of the WAR, Liberty will stop the application and restart it at the new version, otherwise you can restart the server to pick-up changes.
+Go ahead and use Gradle or Maven to rebuild you project now. If you are deploying through a CICS bundle project, update the generated CICS bundle project in zFS and then disable and re-enable the CICS bundle. If you chose to deploy with an `<application>` element and have `<applicationMonitoring>` active, when you upload a new version of the WAR, Liberty will stop the application and restart it at the new version, otherwise you can restart the server to pick-up changes.
 
 To drive our two new methods, use a browser as before, but this time request the new `/STcommit` and `/STrollback` end-points. You will be greeted by each request, and the TSQ called 'EXAMPLE' will be updated.
+
+```
+  CEBR  TSQ EXAMPLE          SYSID Z32A REC     1 OF     4    COL     1 OF    38
+  ENTER COMMAND ===>                                                            
+       **************************  TOP OF QUEUE  *******************************
+ 00001 hello CICS from transactionalCommit()                                    
+ 00002 rollback from transactionalRollback()                                    
+ 00003 hello CICS from springTemplateCommit()                                   
+ 00004 rollback from springTemplateRollback()                                    
+       *************************  BOTTOM OF QUEUE  *****************************                                                                    
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+ PF1 : HELP                PF2 : SWITCH HEX/CHAR     PF3 : TERMINATE BROWSE     
+ PF4 : VIEW TOP            PF5 : VIEW BOTTOM         PF6 : REPEAT LAST FIND     
+ PF7 : SCROLL BACK HALF    PF8 : SCROLL FORWARD HALF PF9 : UNDEFINED            
+ PF10: SCROLL BACK FULL    PF11: SCROLL FORWARD FULL PF12: UNDEFINED            
+ ```
+
 
 
 ## Step 6 : Java EE UserTransaction approach to Bean Managed Transactions
@@ -492,13 +482,7 @@ In this final part of the tutorial we demonstrate how to use Liberty's Transacti
 
 ### JTA in a CICS Liberty JVM server
 
-In CICS, there is an implicit UOW for every task, so transaction management does not need to be explicitly started. For JTA however, a Container Managed Transaction (CMT) annotation is required on a class or method, or a UserTransaction must be coded with the begin() method. A JTA transaction completes at the end of the annotation scope for CMT, or for a `UserTransaction` if the application reaches a U`serTransaction.commit()` or `rollback()`. If no commit or rollback is coded, the Liberty web-container will complete the transaction when the web request terminates.
-
->Note: If using JTA in CICS you cannot use the JCICS methods `Task.commit()` or `Task.rollback()` which drive an corresponding `EXEC CICS SYNPOINT` or `ROLLBACK` because the CICS recovery manager for the task is subordinate to Liberty's transaction manager. Further information on Java Transaction API (JTA) within a CICS Liberty JVM server can be found in the CICS Knowledge Center topic [Java Transaction API](https://www.ibm.com/support/knowledgecenter/SSGMCP_5.6.0/applications/developing/java/dfhpj2_jta.html), which has an example of using it with a Db2 type 2 database connection.  
-
-More in depth information for this with JEE can be found in the following CICSDev artcile
-[Using Java Transactions in CICS Liberty to coordinate JDBC updates](https://github.com/cicsdev/blog-cics-java-jta-jdbc)
-
+In CICS, there is an implicit UOW for every task, so transaction management does not need to be explicitly started. For JTA however, a Container Managed Transaction (CMT) annotation is required on a class or method, or a UserTransaction must be coded with the `begin()` method. A JTA transaction completes at the end of the annotation scope for CMT, or for a `UserTransaction` if the application reaches a U`serTransaction.commit()` or `rollback()`. If no commit or rollback is coded, the Liberty web-container will complete the transaction when the web request terminates.
 
 To see a UserTransaction in action, let's create a new class called `JEEUserTransaction.java` as shown below.
 
@@ -631,27 +615,51 @@ To complete the demo, let's update the application root to provide usage instruc
 ```
 
 
-Don't forget to rebuild and re-deploy the modified application. Then use the `/JEEcommit` and `/JEErollback` end-points to run the new methods.
+Don't forget to rebuild and re-deploy the modified application. Then use the `/JEEcommit` and `/JEErollback` end-points to run the new methods. If you browse the TSQ EXAMPLE you should now see the following additional lines added to the queue.
 
-
-TODO: UPDATE THESE SCREENSHOTS????
-Eg
-
-![JNDICommit](graphics/JNDIcommit.png)
-
-
-Eg
-
-![JNDICommitandrollback](graphics/JNDIcommitandrollback.png)
-
-
+```
+  CEBR  TSQ EXAMPLE          SYSID Z32A REC     1 OF     4    COL     1 OF    38
+  ENTER COMMAND ===>                                                            
+       **************************  TOP OF QUEUE  *******************************
+ 00001 hello CICS from transactionalCommit()                                    
+ 00002 rollback from transactionalRollback()                                    
+ 00003 hello CICS from springTemplateCommit()                                   
+ 00004 rollback from springTemplateRollback()      
+ 00005 hello CICS from javaEECommit()              
+ 00006 rollback from javaEERollback()              
+       *************************  BOTTOM OF QUEUE  *****************************                                                                    
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+ PF1 : HELP                PF2 : SWITCH HEX/CHAR     PF3 : TERMINATE BROWSE     
+ PF4 : VIEW TOP            PF5 : VIEW BOTTOM         PF6 : REPEAT LAST FIND     
+ PF7 : SCROLL BACK HALF    PF8 : SCROLL FORWARD HALF PF9 : UNDEFINED            
+ PF10: SCROLL BACK FULL    PF11: SCROLL FORWARD FULL PF12: UNDEFINED            
+ ```
 
 ## Running the sample
 
 
-To see the full effects of transaction updates on a TSQ in CICS from a Spring Boot application, you can purge/delete the TSQ called 'EXAMPLE', install the TSMODEL to make the TSQ recoverable and drive all 6 web-requests again. With a recoverable TSQ in effect the rollback related writes will not be preserved.
+To see the full effects of transaction updates on a TSQ in CICS from a Spring Boot application, you can delete the EXAMPLE queue using the `PURGE` comman in the CEBR transction. Then install the recoverable TSMODEL, which will mark the TSQ recoverable, and then rull all 6 web-requests again. With a recoverable TSQ in effect the rollback related writes will not be preserved and you should see the following output in the TSQ.
 
-
+```
+  CEBR  TSQ EXAMPLE          SYSID Z32A REC     1 OF     4    COL     1 OF    38
+  ENTER COMMAND ===>                                                            
+       **************************  TOP OF QUEUE  *******************************
+ 00001 hello CICS from transactionalCommit()                                    
+ 00002 hello CICS from springTemplateCommit()                                   
+ 00003 hello CICS from javaEECommit()              
+        *************************  BOTTOM OF QUEUE  *****************************                                                                    
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+ PF1 : HELP                PF2 : SWITCH HEX/CHAR     PF3 : TERMINATE BROWSE     
+ PF4 : VIEW TOP            PF5 : VIEW BOTTOM         PF6 : REPEAT LAST FIND     
+ PF7 : SCROLL BACK HALF    PF8 : SCROLL FORWARD HALF PF9 : UNDEFINED            
+ PF10: SCROLL BACK FULL    PF11: SCROLL FORWARD FULL PF12: UNDEFINED     
+ ```
 
 
 
@@ -665,19 +673,21 @@ These are
 
 ## Further reading
 
-Spring [Introduction to Spring Framework transaction management](https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/transaction.html)
+- Spring [Introduction to Spring Framework transaction management](https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/transaction.html)
+- Spring's programmatic transaction management - [Programmatic transaction management](https://docs.spring.io/spring/docs/3.0.0.M3/reference/html/ch11s06.html)
+- IBM Knowledge Center [Java Transaction API (JTA) in CICS Liberty](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.6.0/applications/developing/java/dfhpj2_jta.html)
+- CICSDev blog - [Using Java Transactions in CICS Liberty to coordinate JDBC updates](https://github.com/cicsdev/blog-cics-java-jta-jdbc/blob/master/blog.md)
 
-IBM Knowledge Center [Java Transaction API (JTA)](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.6.0/applications/developing/java/dfhpj2_jta.html)
+
+More in depth information for this with JEE can be found in the following CICSDev artcile
+[Using Java Transactions in CICS Liberty to coordinate JDBC updates](https://github.com/cicsdev/blog-cics-java-jta-jdbc)
 
 
 TODO: REMOVE THESE links as not AD related??
 
 IBM Knowledge Center [Deploying a CICS bundle](https://www.ibm.com/support/knowledgecenter/en/SSSQ3W_5.6.0/com.ibm.cics.core.help/topics/tasks/task_deploy_bundle_project.html)
-
 IBM Knowledge Center [BUNDLE resources](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.6.0/com.ibm.cics.ts.resourcedefinition.doc/resources/bundle/dfha4_overview.html)
-
 CICS Explorer Download [IBM CICS Explorer download and how to add the IBM CICS SDK for Java EE and Liberty to your CICS Explorer from](https://www.ibm.com/support/pages/cics-explorer-downloads)
-
 Redbooks [Liberty in IBM CICS: Deploying and Managing Java EE Applications - this IBM Redbooks publication walks through everything you need to know about deploying applications in Liberty in CICS](http://www.redbooks.ibm.com/abstracts/sg248418.html?Open)
 
 
