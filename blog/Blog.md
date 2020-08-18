@@ -257,7 +257,7 @@ public class SpringTransactional
 
 In this example we write text to the CICS TSQ using the `TSQ` method `writeString()` and then either commit or rollback the transaction. If the text contains the word 'rollback' we throw an Unchecked `RuntimeException` to force rollback, otherwise the transaction is committed.
 
-> Note: By default the Spring framework transaction infrastructure only marks a transaction for rollback if it detects an unchecked exception. JCICS exceptions, such as a `CICSConditionException` are checked. In order to rollback for all exceptions (including the CICS checked exceptions) we can override the default behaviour with an explicit setting on the annotation as shown: `@Transactional(rollbackFor=Exception.class)`.
+> **Note:** By default the Spring framework transaction infrastructure only marks a transaction for rollback if it detects an unchecked exception. JCICS exceptions, such as a `CICSConditionException` are checked. In order to rollback for all exceptions (including the CICS checked exceptions) we can override the default behaviour with an explicit setting on the annotation as shown: `@Transactional(rollbackFor=Exception.class)`.
 
 
 To use our `SpringTransactional` class we need to update our `TransactionController.java` with a new method to *autowire* in an instance of the `SpringTransactional` class and then to drive it in response to a web request. Add the following code into your `TransactionController.java` class which will map requests to the `/transactionalCommit` URL to the `SpringTransactional` method `writeTSQ()`.
@@ -286,11 +286,24 @@ To use our `SpringTransactional` class we need to update our `TransactionControl
 ```
 
 You can now deploy the application to CICS and run the request using the *root URL* with the new URL mapping `transactionalCommit`. You should see the web browser return "hello CICS from transactionalCommit()". 
-Browsing the CICS TSQ called EXAMPLE using the CICS transaction `CEBR` will show the same string written to the TSQ as shown below.
+Browsing the  TSQ called EXAMPLE using the CICS transaction `CEBR` will show the same string written to the TSQ as shown below.
 
-
-TODO: UPDATE THIS SCREENSHOT
-![TransactionalTSQ](graphics/TransactionalTSQ.png)
+```
+  CEBR  TSQ EXAMPLE          SYSID Z32A REC     1 OF     1    COL     1 OF    38
+  ENTER COMMAND ===>                                                            
+       **************************  TOP OF QUEUE  *******************************
+ 00001 hello CICS from transactionalCommit()                                 
+       *************************  BOTTOM OF QUEUE  *****************************
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+ PF1 : HELP                PF2 : SWITCH HEX/CHAR     PF3 : TERMINATE BROWSE     
+ PF4 : VIEW TOP            PF5 : VIEW BOTTOM         PF6 : REPEAT LAST FIND     
+ PF7 : SCROLL BACK HALF    PF8 : SCROLL FORWARD HALF PF9 : UNDEFINED            
+ PF10: SCROLL BACK FULL    PF11: SCROLL FORWARD FULL PF12: UNDEFINED            
+ ```
 
 
 Now let's add a second end-point which calls the same `SpringTransactional` class, but this time with the text "rollback" in the message. Add the following code into `TransactionController.java`.
