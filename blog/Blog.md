@@ -173,7 +173,7 @@ For transactional recovery to work with TSQs you need to make the TSQ recoverabl
 
 For example:
 
-![TSModel](graphics/TSModel.PNG)
+![TSModel](graphics/TSMODEL.PNG)
 
 
 
