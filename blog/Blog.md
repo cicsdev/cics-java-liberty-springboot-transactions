@@ -308,6 +308,7 @@ Now let's add a second end-point which calls the same `SpringTransactional` clas
 
 This time if you use your browser to request the `/transactionalRollback` end-point you will be informed that an Exception occurred and that rollback was driven. If you browse the TSQ again, and see a second entry this is because we haven't yet installed the TSMODEL definition into CICS in order to designate the TSQ as recoverable. If you hold off installing the TSMODEL, you can run the rest of this tutorial proving that code is executed and that TSQ entries are written, then install the TSMODEL, purge the TSQ, re-run the examples and observe the differences when rollback takes effect.
 
+> Note: If application security is enabled in the target Liberty server, you will also need to enable an authentication method, and authorisation roles. To do this you will need to create a Jave EE web.xml file, and place this in the src/main/webapp/WEB-INF/ folder. A sample web.xml file that supports basic authentication is provided in the associated Git repository. For further details on enabling security refer to the previous tutorial [Spring Boot Java applications for CICS - Part 2 - Security](https://github.com/cicsdev/cics-java-liberty-springboot-security/blob/master/blog/blog.md)
 
 
 ## Step 5 : Spring's TransactionTemplate for Bean Managed Transactions
