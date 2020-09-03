@@ -1,4 +1,4 @@
-# Spring Boot Java applications for CICS - Part 3 - Transactions
+# Spring Boot Java applications for CICS, Part 3: Transactions
 
 ## Introduction
 
