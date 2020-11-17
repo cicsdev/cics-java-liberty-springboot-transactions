@@ -18,6 +18,10 @@ The artifact built from this project is a WAR file that can be deployed into CIC
 - Either Gradle or Apache Maven on the workstation (optional if using Wrappers)
 - A CICS TSMODEL resource with the attribute `Recovery(ON)` for the TSQ called `EXAMPLE`.
 
+## Reference
+
+More information about the development of this sample can be found in the blog [Spring Boot Java applications for CICS, Part 3: Transactions](https://developer.ibm.com/tutorials/spring-boot-java-applications-for-cics-part-3-transactions/)
+
 ## Downloading
 
 - Clone the repository using your IDEs support, such as the Eclipse Git plugin
