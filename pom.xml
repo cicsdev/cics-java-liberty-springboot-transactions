@@ -60,7 +60,7 @@
       <artifactId>spring-tx</artifactId>
     </dependency>
 				
-    <!-- javax.transaction API -->
+    <!-- Compile against, but don't include javax.transaction API -->
     <dependency>
       <groupId>javax.transaction</groupId>
       <artifactId>javax.transaction-api</artifactId>
