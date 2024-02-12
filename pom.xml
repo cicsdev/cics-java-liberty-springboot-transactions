@@ -19,6 +19,10 @@
   <description>Demo project for Spring and Liberty transactions</description>
   <properties>
     <java.version>1.8</java.version>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
   </properties>
   
   <!-- CICS BOM (as of May 2020) -->
