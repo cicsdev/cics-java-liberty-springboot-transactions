@@ -1,4 +1,5 @@
 # cics-java-liberty-springboot-transactions
+[![Build](https://github.com/SoftlySplinter/cics-java-liberty-springboot-transactions/actions/workflows/java.yaml/badge.svg)](https://github.com/SoftlySplinter/cics-java-liberty-springboot-transactions/actions/workflows/java.yaml)
 
 This sample project demonstrates how a Spring Boot application deployed to a Liberty JVM server, can use different techniques to integrate with CICS transactions. The application uses a web browser front end and makes use of the Java™ Transaction API (JTA). The three techniques demonstrated are: Java EE User Transaction, Spring's `@Transactional` annotation, and the Spring Transaction Template. 
 
