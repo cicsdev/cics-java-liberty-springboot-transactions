@@ -36,7 +36,7 @@ You can browse the published versions of the CICS BOM at [Maven Central.](https:
  
 Gradle (build.gradle): 
 
-`compileOnly enforcedPlatform("com.ibm.cics:com.ibm.cics.ts.bom:5.5-20200519131930-PH25409")`
+`compileOnly enforcedPlatform("com.ibm.cics:com.ibm.cics.ts.bom:6.1-20250812133513-PH63856")`
 
 Maven (POM.xml):
 
@@ -46,7 +46,7 @@ Maven (POM.xml):
       <dependency>
         <groupId>com.ibm.cics</groupId>
         <artifactId>com.ibm.cics.ts.bom</artifactId>
-        <version>5.5-20200519131930-PH25409</version>
+        <version>6.1-20250812133513-PH63856</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -149,7 +149,6 @@ Or:
 5. Next, try the *Spring Transaction Template* and *Java EE User Transaction* demos at `/STcommit` and `/JEEcommit` respectively. Along with their rollback counterparts `/STrollback` and `/JEErollback`. 
 
 6. For confirmation of the behaviour, you can run the sample before your TSQ is designated as recoverable (through a TSMODEL) and again afterwards. Observe how the entries to the TSQ are either committed, or written - then rolled back.
-
 
 
 ## License
