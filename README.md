@@ -11,9 +11,9 @@ The artifact built from this project is a WAR file that can be deployed into CIC
 
 ## Prerequisites
 
-- CICS TS V5.3 or later
+- CICS TS V6.1 or later
 - A configured Liberty JVM server in CICS
-- Java SE 1.8 or later on the workstation
+- Requires Java 17 or later. on the workstation
 - An Eclipse development environment on the workstation (optional)
 - Either Gradle or Apache Maven on the workstation (optional if using Wrappers)
 - A CICS TSMODEL resource with the attribute `Recovery(ON)` for the TSQ called `EXAMPLE`.
