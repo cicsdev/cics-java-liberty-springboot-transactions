@@ -39,7 +39,7 @@ java {
 dependencies
 {    
     // CICS BOM (as of May 2020)
-    compileOnly enforcedPlatform('com.ibm.cics:com.ibm.cics.ts.bom:5.5-20200519131930-PH25409')
+    compileOnly enforcedPlatform('com.ibm.cics:com.ibm.cics.ts.bom:6.1-20250812133513-PH63856')
     
     // Don't include JCICS in the final build (no need for version because we have BOM)
     compileOnly("com.ibm.cics:com.ibm.cics.server")   
