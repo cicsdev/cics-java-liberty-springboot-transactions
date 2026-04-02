@@ -68,8 +68,8 @@
 				
     <!-- Compile against, but don't include javax.transaction API -->
     <dependency>
-      <groupId>javax.transaction</groupId>
-      <artifactId>javax.transaction-api</artifactId>
+      <groupId>jakarta.transaction</groupId>
+      <artifactId>jakarta.transaction-api</artifactId>
       <version>1.3</version>
       <scope>provided</scope>
     </dependency>	  

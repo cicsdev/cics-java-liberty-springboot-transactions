@@ -49,9 +49,9 @@ dependencies
     
     // Don't include TomCat in the runtime build
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-    
-    // Java Transaction API  - don't include in the final build
-    implementation 'jakarta.transaction:jakarta.transaction-api'
+  
+    // Java Transaction API - don't include in the final build
+    compileOnly 'jakarta.transaction:jakarta.transaction-api'
     // Spring's Transactional API
     implementation ("org.springframework:spring-tx")           
 }
