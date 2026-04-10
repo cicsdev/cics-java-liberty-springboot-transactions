@@ -15,12 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
     strategy:
+  strategy:
       matrix:
-        jdk: [8, 11]
-        experimental: [false]
-        include:
-          - jdk: 17
-            experimental: true
+         jdk: [17]
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK ${{ matrix.jdk }}
