@@ -36,7 +36,7 @@ You can browse the published versions of the CICS BOM at [Maven Central.](https:
  
 Gradle (build.gradle): 
 
-`compileOnly enforcedPlatform("com.ibm.cics:com.ibm.cics.ts.bom:5.5-20200519131930-PH25409")`
+`compileOnly enforcedPlatform("com.ibm.cics:com.ibm.cics.ts.bom:6.1-20250812133513-PH63856")`
 
 Maven (POM.xml):
 
@@ -46,7 +46,7 @@ Maven (POM.xml):
       <dependency>
         <groupId>com.ibm.cics</groupId>
         <artifactId>com.ibm.cics.ts.bom</artifactId>
-        <version>5.5-20200519131930-PH25409</version>
+        <version>6.1-20250812133513-PH63856</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -109,7 +109,7 @@ This creates a WAR file inside the `target` directory.
 
 ## Deploying
 
-Ensure you have the `jsp-2.3` feature (which itself contains `servlet`) configured in `server.xml`:
+Ensure you have the `pages-3.1` feature (which itself contains `servlet`) configured in `server.xml`:
 
 Either:    
 1. Create a CICS bundle project and copy the WAR file into it.
@@ -141,6 +141,7 @@ Or:
 1. With the application installed, the root URL for the sample application can be found in messages.log e.g. `http://myzos.mycompany.com:32000/cics-java-liberty-springboot-transactions-0.1.0/`.
 
 2. Visit the URL from the browser to review the 'Usage' guide.
+   Note: The trailing "/" is required to display the Usage Guide.
 
 3. To demonstrate the `@Transactional` container managed transaction, drive the `/transactionalCommit` end-point. You should see *hello CICS from transactionalCommit()* at the browser and a corresponding entry in the TSQ 'EXAMPLE'. You can browse the contents of the TSQ using the CEBR transaction in CICS.
 
