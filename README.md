@@ -78,12 +78,12 @@ Run the following in a local command prompt:
 On Linux or Mac:
 
 ```shell
-./gradlew clean bootWar
+./gradlew clean build
 ```
 On Windows:
 
 ```shell
-gradlew.bat clean bootWar
+gradlew.bat clean build
 ```
 
 This creates a WAR file inside the `build/libs` directory.
