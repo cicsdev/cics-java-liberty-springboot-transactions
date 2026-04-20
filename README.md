@@ -11,9 +11,9 @@ The artifact built from this project is a WAR file that can be deployed into CIC
 
 ## Prerequisites
 
-- CICS TS V5.3 or later
+- CICS TS V6.1 or later
 - A configured Liberty JVM server in CICS
-- Java SE 1.8 or later on the workstation
+- Requires Java 17 or later. on the workstation
 - An Eclipse development environment on the workstation (optional)
 - Either Gradle or Apache Maven on the workstation (optional if using Wrappers)
 - A CICS TSMODEL resource with the attribute `Recovery(ON)` for the TSQ called `EXAMPLE`.
@@ -78,12 +78,12 @@ Run the following in a local command prompt:
 On Linux or Mac:
 
 ```shell
-./gradlew clean bootWar
+./gradlew clean build
 ```
 On Windows:
 
 ```shell
-gradlew.bat clean bootWar
+gradlew.bat clean build
 ```
 
 This creates a WAR file inside the `build/libs` directory.
@@ -109,7 +109,7 @@ This creates a WAR file inside the `target` directory.
 
 ## Deploying
 
-Ensure you have the `jsp-2.3` feature (which itself contains `servlet`) configured in `server.xml`:
+Ensure you have the `pages-3.1` feature (which itself contains `servlet`) configured in `server.xml`:
 
 Either:    
 1. Create a CICS bundle project and copy the WAR file into it.
@@ -141,6 +141,7 @@ Or:
 1. With the application installed, the root URL for the sample application can be found in messages.log e.g. `http://myzos.mycompany.com:32000/cics-java-liberty-springboot-transactions-0.1.0/`.
 
 2. Visit the URL from the browser to review the 'Usage' guide.
+   Note: The trailing "/" is required to display the Usage Guide.
 
 3. To demonstrate the `@Transactional` container managed transaction, drive the `/transactionalCommit` end-point. You should see *hello CICS from transactionalCommit()* at the browser and a corresponding entry in the TSQ 'EXAMPLE'. You can browse the contents of the TSQ using the CEBR transaction in CICS.
 
