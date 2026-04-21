@@ -57,7 +57,7 @@ jobs:
     
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }}
-   strategy:
+    strategy:
       matrix:
          jdk: [17]
     steps:
