@@ -1,6 +1,6 @@
 plugins
 {
-	id 'org.springframework.boot' version '3.5.9' 
+	id 'org.springframework.boot' version '3.5.13' 
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'eclipse'
@@ -38,7 +38,7 @@ java {
 
 dependencies
 {    
-    // CICS BOM (as of May 2020)
+    // CICS BOM (as of Sept 2024)
     compileOnly enforcedPlatform('com.ibm.cics:com.ibm.cics.ts.bom:6.1-20250812133513-PH63856')
     
     // Don't include JCICS in the final build (no need for version because we have BOM)
