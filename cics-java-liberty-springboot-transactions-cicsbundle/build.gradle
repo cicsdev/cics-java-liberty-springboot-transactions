@@ -1,0 +1,31 @@
+// ============================================================================
+// Plugins
+// ============================================================================
+plugins {
+    id 'com.ibm.cics.bundle' version '1.0.8'
+}
+
+// ============================================================================
+// Project Information
+// ============================================================================
+description = 'CICS Transactions Springboot Application - CICS Bundle'
+version = '1.0.0'
+
+// ============================================================================
+// Dependencies
+// ============================================================================
+dependencies {
+    // Application WAR from sibling project
+    cicsBundlePart project(path: ':cics-java-liberty-springboot-transactions-app', configuration: 'archives')
+}
+
+// ============================================================================
+// CICS Bundle Configuration
+// ============================================================================
+cicsBundle {
+    build {
+        defaultJVMServer = project.findProperty('cics.jvmserver') ?: cicsJvmServer
+    }
+}
+
+// Made with Bob

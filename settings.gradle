@@ -1,1 +1,10 @@
-rootProject.name = 'com.ibm.cicsdev.springboot.transactions'
+// ============================================================================
+// Root Project Configuration
+// ============================================================================
+rootProject.name = 'cics-java-liberty-springboot-transactions'
+
+// ============================================================================
+// Subprojects
+// ============================================================================
+include(':cics-java-liberty-springboot-transactions-app')
+include(':cics-java-liberty-springboot-transactions-cicsbundle')
