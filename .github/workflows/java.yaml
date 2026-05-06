@@ -8,16 +8,22 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
-jobs:
+permissions:
+  contents: read
 
-  build-mvnw:
-    name: Build Maven Wrapper
+jobs:
+  build-maven:
+    name: Build Maven
 
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-         jdk: [17, 21]
-         
+        jdk: [17, 21]
+        experimental: [false]
+        include:
+          - jdk: 25
+            experimental: true
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK ${{ matrix.jdk }}
@@ -27,16 +33,72 @@ jobs:
           distribution: "semeru"
           cache: maven
       - name: Build with Maven
+        run: mvn --batch-mode --update-snapshots --file pom.xml -Djava.version=${{ matrix.jdk }} verify
+      - run: mkdir staging && cp cics-java-liberty-springboot-transactions-app/target/*.war staging
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cics-java-liberty-springboot-transactions (Maven, Java ${{ matrix.jdk }})
+          path: staging
+
+  build-mvnw:
+    name: Build Maven Wrapper
+
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      matrix:
+        jdk: [17, 21]
+        experimental: [false]
+        include:
+          - jdk: 25
+            experimental: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK ${{ matrix.jdk }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.jdk }}
+          distribution: "semeru"
+          cache: maven
+      - name: Build with Maven Wrapper
         run: ./mvnw --batch-mode --update-snapshots --file pom.xml -Djava.version=${{ matrix.jdk }} verify
 
+  build-gradle:
+    name: Build Gradle
+    
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      matrix:
+        jdk: [17, 21]
+        experimental: [false]
+        include:
+          - jdk: 25
+            experimental: true
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK ${{ matrix.jdk }}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ matrix.jdk }}
+        distribution: 'semeru'
+    - name: Build with Gradle
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
+      with:
+        arguments: build -Pjava_version=${{ matrix.jdk }}
+      
   build-gradlew:
     name: Build Gradle wrapper
     
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
-         jdk: [17, 21]
-         
+        jdk: [17, 21]
+        experimental: [false]
+        include:
+          - jdk: 25
+            experimental: true
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK ${{ matrix.jdk }}
@@ -48,3 +110,5 @@ jobs:
       uses: gradle/actions/setup-gradle@v4
     - name: Build with Gradle
       run: ./gradlew build -Pjava_version=${{ matrix.jdk }}
+
+
