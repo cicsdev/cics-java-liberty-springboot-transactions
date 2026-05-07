@@ -16,7 +16,7 @@
   <!-- ================================================================ -->
   <groupId>com.ibm.cicsdev</groupId>
   <artifactId>cics-java-liberty-springboot-transactions</artifactId>
-  <version>0.1.0</version>
+  <version>1.0.0</version>
   <description>Demo project for Spring Boot and Liberty transactions</description>
   <packaging>pom</packaging>
   
