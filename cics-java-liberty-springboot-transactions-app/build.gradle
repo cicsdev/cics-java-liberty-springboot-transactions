@@ -1,17 +1,35 @@
 plugins
 {
-	id 'org.springframework.boot' version '3.5.13' 
+	id 'org.springframework.boot' version '3.5.13'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'eclipse'
-	id 'idea'
 	id 'war'
-	id 'maven-publish'
+	id 'idea'
 }
 
 group = 'com.ibm.cicsdev.springboot'
-archivesBaseName='cics-java-liberty-springboot-transactions'
 version = '0.1.0'
+
+// ============================================================================
+// Java Configuration
+// ============================================================================
+java {
+    sourceCompatibility = JavaVersion.toVersion(java_version)
+    targetCompatibility = JavaVersion.toVersion(java_version)
+}
+
+// ============================================================================
+// WAR Configuration
+// ============================================================================
+war {
+    archiveFileName = "cics-java-liberty-springboot-transactions-app-${version}.war"
+}
+
+// Two versions of the WAR would be built, one for embedding into servers like Liberty (plain)
+// and a bootWAR which can run standalone and contains all the Tomcat and Spring Boot stuff
+// we don't need bootWAR, so disable it.
+bootWar { enabled = false }
 
 // If in Eclipse, add Javadoc to the local project classpath
 eclipse
@@ -22,17 +40,9 @@ eclipse
     }
 }
 
-
-
 repositories
 {
 	mavenCentral()
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(java_version)
-    }
 }
 
 
@@ -54,34 +64,4 @@ dependencies
     compileOnly 'jakarta.transaction:jakarta.transaction-api'
     // Spring's Transactional API
     implementation ("org.springframework:spring-tx")           
-}
-
-//Don't generate a FAT bootWar, we don't need to run standalone
-bootWar { enabled = false }
-
-publishing {
-    publications {
-    	// Publication for JCICS
-        maven(MavenPublication) {
-            groupId "${group}"
-            version "${version}"
-            artifactId "${archivesBaseName}" 
-            artifact bootWar
-        }
-    }
-    
-    // Configure the Maven repository to publish to somewhere which is configurable
-    // with environment variables from outside gradle.
-    //
-    // For example:
-    //   gradle build publish \
-    //   -Ppublish_repo_releases_url="file://my-folder" \
-    //   -Ppublish_repo_releases_name="my-maven-repo"
-    //
-    repositories {
-        maven {
-            url = "${publish_repo_releases_url}/${publish_repo_releases_name}"
-        }
-    }
-
 }

@@ -11,25 +11,27 @@
     <relativePath/>
   </parent>
   
-  
-  <!--  Application properties -->
+  <!-- ================================================================ -->
+  <!-- Project Coordinates                                              -->
+  <!-- ================================================================ -->
   <groupId>com.ibm.cicsdev</groupId>
   <artifactId>cics-java-liberty-springboot-transactions</artifactId>
-  <version>0.1.0</version>  
-  <name>com.ibm.cicsdev.springboot.transactions</name>
-  <description>Demo project for Spring and Liberty transactions</description>
+  <version>1.0.0</version>
+  <description>Demo project for Spring Boot and Liberty transactions</description>
+  <packaging>pom</packaging>
   
   <properties>
     <java.version>17</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>${java.version}</maven.compiler.target>
-    <maven.compiler.source>${java.version}</maven.compiler.source>    
-    <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <cics.jvmserver>DFHWLP</cics.jvmserver>
   </properties>
   
-  <!-- CICS TS V6.1 BOM (as of Sept 2024) -->
+  <!-- Dependency Management -->
   <dependencyManagement>
     <dependencies>
+      <!-- CICS TS V6.1 BOM (as of Sept 2024) -->
       <dependency>
         <groupId>com.ibm.cics</groupId>
         <artifactId>com.ibm.cics.ts.bom</artifactId>
@@ -40,71 +42,12 @@
     </dependencies>
   </dependencyManagement>
   
-  <dependencies>   
-    <!-- Compile against, but don't include JCICS in the final build (version and scope are from BOM) -->
-    <dependency>
-      <groupId>com.ibm.cics</groupId>
-      <artifactId>com.ibm.cics.server</artifactId>
-    </dependency>
-    
-    <!-- Spring Boot web support -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-
-    <!-- Compile against, but don't include TomCat in the runtime build -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-tomcat</artifactId>
-      <scope>provided</scope>
-    </dependency>
-	  
-    <!-- Spring-transactions -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-tx</artifactId>
-    </dependency>
-				
-    <!-- Compile against, but don't include javax.transaction API -->
-    <dependency>
-      <groupId>jakarta.transaction</groupId>
-      <artifactId>jakarta.transaction-api</artifactId>
-      <scope>provided</scope>
-    </dependency>	  
-
-  </dependencies>
-
-  <!-- Package as an executable war (default jar) -->
-  <packaging>war</packaging>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
-
-
-    <!-- 
-    Publishes artifacts to here if the deploy goal is used. 
-
-    The values here can be passed on the maven command line
-    using the -D flag syntax 
-  
-    for example:
-    -Dpublish_repo_snapshots_name=my-repo 
-    -->
-    <distributionManagement>
-        <snapshotRepository>
-            <id>${publish_repo_snapshots_name}</id>
-            <url>${publish_repo_snapshots_url}</url>
-        </snapshotRepository>
-        <repository>
-            <id>${publish_repo_releases_name}</id>
-            <url>${publish_repo_releases_url}</url>
-        </repository>
-    </distributionManagement>
+  <!-- ================================================================ -->
+  <!-- Modules                                                          -->
+  <!-- ================================================================ -->
+  <modules>
+    <module>cics-java-liberty-springboot-transactions-app</module>
+    <module>cics-java-liberty-springboot-transactions-cicsbundle</module>
+  </modules>
 
 </project>

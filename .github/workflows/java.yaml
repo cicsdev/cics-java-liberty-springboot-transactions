@@ -8,6 +8,9 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+permissions:
+  contents: read
+
 jobs:
   build-maven:
     name: Build Maven
@@ -15,21 +18,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jdk: [17]
+        jdk: [17, 21]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up JDK ${{ matrix.jdk }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.jdk }}
           distribution: "semeru"
           cache: maven
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots --file pom.xml -Djava.version=${{ matrix.jdk }} package
-      - run: mkdir staging && cp target/*.war staging
+        run: mvn --batch-mode --update-snapshots --file pom.xml -Djava.version=${{ matrix.jdk }} verify
+      - run: mkdir staging && cp cics-java-liberty-springboot-transactions-app/target/*.war staging
       - uses: actions/upload-artifact@v4
         with:
-          name: cics-java-liberty-sprintboot-transactions (Maven, Java ${{ matrix.jdk }})
+          name: cics-java-liberty-springboot-transactions (Maven, Java ${{ matrix.jdk }})
           path: staging
 
   build-mvnw:
@@ -38,17 +41,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jdk: [17]
+        jdk: [17, 21]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up JDK ${{ matrix.jdk }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.jdk }}
           distribution: "semeru"
           cache: maven
-      - name: Build with Maven
-        run: ./mvnw --batch-mode --update-snapshots --file pom.xml -Djava.version=${{ matrix.jdk }} package
+      - name: Build with Maven Wrapper
+        run: ./mvnw --batch-mode --update-snapshots --file pom.xml -Djava.version=${{ matrix.jdk }} verify
 
   build-gradle:
     name: Build Gradle
@@ -56,15 +59,36 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jdk: [17]
+        jdk: [17, 21]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up JDK ${{ matrix.jdk }}
       uses: actions/setup-java@v4
       with:
         java-version: ${{ matrix.jdk }}
         distribution: 'semeru'
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
       with:
         arguments: build -Pjava_version=${{ matrix.jdk }}
+      
+  build-gradlew:
+    name: Build Gradle wrapper
+    
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        jdk: [17, 21]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK ${{ matrix.jdk }}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ matrix.jdk }}
+        distribution: 'semeru'
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+    - name: Build with Gradle
+      run: ./gradlew build -Pjava_version=${{ matrix.jdk }}
+
+
