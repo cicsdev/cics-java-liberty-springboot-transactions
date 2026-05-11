@@ -20,6 +20,9 @@ jobs:
       matrix:
         jdk: [17, 21]
     steps:
+      # Using version tag for GitHub official actions (trusted) for easier maintenance.
+      # For production code, consider pinning to commit SHA for enhanced security.
+      # See: https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
       - uses: actions/checkout@v4
       - name: Set up JDK ${{ matrix.jdk }}
         uses: actions/setup-java@v4
@@ -43,6 +46,9 @@ jobs:
       matrix:
         jdk: [17, 21]
     steps:
+      # Using version tag for GitHub official actions (trusted) for easier maintenance.
+      # For production code, consider pinning to commit SHA for enhanced security.
+      # See: https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
       - uses: actions/checkout@v4
       - name: Set up JDK ${{ matrix.jdk }}
         uses: actions/setup-java@v4
@@ -61,16 +67,21 @@ jobs:
       matrix:
         jdk: [17, 21]
     steps:
+    # Using version tag for GitHub official actions (trusted) for easier maintenance.
+    # For production code, consider pinning to commit SHA for enhanced security.
+    # See: https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
     - uses: actions/checkout@v4
     - name: Set up JDK ${{ matrix.jdk }}
       uses: actions/setup-java@v4
       with:
         java-version: ${{ matrix.jdk }}
         distribution: 'semeru'
+    # Using version tag for Gradle official action (trusted) for easier maintenance.
+    # Migrated from deprecated gradle-build-action to modern setup-gradle action.
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
-      with:
-        arguments: build -Pjava_version=${{ matrix.jdk }}
+      run: gradle build -Pjava_version=${{ matrix.jdk }}
       
   build-gradlew:
     name: Build Gradle wrapper
@@ -80,12 +91,17 @@ jobs:
       matrix:
         jdk: [17, 21]
     steps:
+    # Using version tag for GitHub official actions (trusted) for easier maintenance.
+    # For production code, consider pinning to commit SHA for enhanced security.
+    # See: https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
     - uses: actions/checkout@v4
     - name: Set up JDK ${{ matrix.jdk }}
       uses: actions/setup-java@v4
       with:
         java-version: ${{ matrix.jdk }}
         distribution: 'semeru'
+    # Using version tag for Gradle official action (trusted) for easier maintenance.
+    # This demonstrates the recommended approach for CICS sample repositories.
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
     - name: Build with Gradle
