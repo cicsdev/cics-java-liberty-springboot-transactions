@@ -2,7 +2,8 @@
 // Plugins
 // ============================================================================
 plugins {
-    id 'com.ibm.cics.bundle' version '1.0.8'
+    // Updated to latest version for Gradle 8.x compatibility
+    id 'com.ibm.cics.bundle' version '1.1.0'
 }
 
 // ============================================================================
