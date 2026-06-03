@@ -18,11 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jdk: [17, 21]
+        jdk: [17, 21, 25]
     steps:
-      # Using version tag for GitHub official actions (trusted) for easier maintenance.
-      # For production code, consider pinning to commit SHA for enhanced security.
-      # See: https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
       - uses: actions/checkout@v4
       - name: Set up JDK ${{ matrix.jdk }}
         uses: actions/setup-java@v4
@@ -31,12 +28,7 @@ jobs:
           distribution: "semeru"
           cache: maven
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots --file pom.xml -Djava.version=${{ matrix.jdk }} verify
-      - run: mkdir staging && cp cics-java-liberty-springboot-transactions-app/target/*.war staging
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cics-java-liberty-springboot-transactions (Maven, Java ${{ matrix.jdk }})
-          path: staging
+        run: mvn --batch-mode --update-snapshots --file pom.xml -Djava.version=${{ matrix.jdk }} package
 
   build-mvnw:
     name: Build Maven Wrapper
@@ -44,11 +36,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jdk: [17, 21]
+        jdk: [17, 21, 25]
     steps:
-      # Using version tag for GitHub official actions (trusted) for easier maintenance.
-      # For production code, consider pinning to commit SHA for enhanced security.
-      # See: https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
       - uses: actions/checkout@v4
       - name: Set up JDK ${{ matrix.jdk }}
         uses: actions/setup-java@v4
@@ -56,8 +45,8 @@ jobs:
           java-version: ${{ matrix.jdk }}
           distribution: "semeru"
           cache: maven
-      - name: Build with Maven Wrapper
-        run: ./mvnw --batch-mode --update-snapshots --file pom.xml -Djava.version=${{ matrix.jdk }} verify
+      - name: Build with Maven
+        run: ./mvnw --batch-mode --update-snapshots --file pom.xml -Djava.version=${{ matrix.jdk }} package
 
   build-gradle:
     name: Build Gradle
@@ -65,20 +54,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jdk: [17, 21]
+        jdk: [17, 21, 25]
     steps:
-    # Using version tag for GitHub official actions (trusted) for easier maintenance.
-    # For production code, consider pinning to commit SHA for enhanced security.
-    # See: https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
     - uses: actions/checkout@v4
     - name: Set up JDK ${{ matrix.jdk }}
       uses: actions/setup-java@v4
       with:
         java-version: ${{ matrix.jdk }}
         distribution: 'semeru'
-    # Using version tag for Gradle (trusted action) for easier maintenance.
-    # For production code, consider pinning to commit SHA for enhanced security.
-    # See: https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
     - name: Build with Gradle
@@ -90,19 +73,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jdk: [17, 21]
+        jdk: [17, 21, 25]
     steps:
-    # Using version tag for GitHub official actions (trusted) for easier maintenance.
-    # For production code, consider pinning to commit SHA for enhanced security.
-    # See: https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
     - uses: actions/checkout@v4
     - name: Set up JDK ${{ matrix.jdk }}
       uses: actions/setup-java@v4
       with:
         java-version: ${{ matrix.jdk }}
         distribution: 'semeru'
-    # Using version tag for Gradle official action (trusted) for easier maintenance.
-    # This demonstrates the recommended approach for CICS sample repositories.
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
     - name: Build with Gradle
