@@ -1,13 +1,32 @@
 # cics-java-liberty-springboot-transactions
 [![Build](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/actions/workflows/build.yaml/badge.svg)](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/actions/workflows/build.yaml)
+[![License](https://img.shields.io/badge/License-EPL%202.0-red.svg)](https://www.eclipse.org/legal/epl-2.0/)
 
-This sample project demonstrates how a Spring Boot application deployed to a Liberty JVM server, can use different techniques to integrate with CICS transactions. The application uses a web browser front end and makes use of the Java™ Transaction API (JTA). The three techniques demonstrated are: Java EE User Transaction, Spring's `@Transactional` annotation, and the Spring Transaction Template. 
+## Overview
 
-The Java™ Transaction API (JTA) is described in the [IBM Java™ Transaction API (JTA)](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.4.0/applications/developing/java/dfhpj2_jta.html)
+This sample project demonstrates how a Spring Boot application deployed to a Liberty JVM server can use different techniques to integrate with CICS transactions. The application uses a web browser front end and makes use of the Java™ Transaction API (JTA). The three techniques demonstrated are: Java EE User Transaction, Spring's `@Transactional` annotation, and the Spring Transaction Template.
 
-For more information on `@Transactional` and Spring Transaction Templates see [Spring Transaction Management](https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/transaction.html)
+## Key Features
 
-The artifact built from this project is a WAR file that can be deployed into CICS Liberty in a variety of ways from a direct <application> entry in server.xml, to a CICS bundle project. For more information, see **Deploying**.
+- **JTA Integration**: Demonstrates Java Transaction API usage in CICS
+- **Multiple Transaction Techniques**: Shows three different approaches to transaction management
+- **Spring Boot Integration**: Uses Spring's `@Transactional` annotation and Transaction Template
+- **Java EE User Transaction**: Demonstrates programmatic transaction control
+- **Recoverable TSQ Operations**: Shows transaction commit and rollback with CICS temporary storage queues
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Prerequisites](#prerequisites)
+- [Reference](#reference)
+- [Downloading](#downloading)
+- [Building the Sample](#building-the-sample)
+- [Deploying to a CICS Liberty JVM server](#deploying-to-a-cics-liberty-jvm-server)
+- [Running the Sample](#running-the-sample)
+- [License](#license)
+- [Additional Resources](#additional-resources)
+- [Contributing](#contributing)
 
 ## Prerequisites
 
@@ -55,7 +74,7 @@ Maven (POM.xml):
   ```
 
   
-## Building 
+## Building the Sample
 
 You can build the sample using an IDE of your choice, or you can build it from the command line. For both approaches, using the supplied Gradle or Maven wrapper is the recommended way to get a consistent version of build tooling. 
 
@@ -63,7 +82,7 @@ On the command line, you simply swap the Gradle or Maven command for the wrapper
   
 For an IDE, taking Eclipse as an example, the plug-ins for Gradle *buildship* and Maven *m2e* will integrate with the "Run As..." capability, allowing you to specify whether you want to build the project with a Wrapper, or a specific version of your chosen build tool.
 
-The required build-tasks are typically `clean bootWar` for Gradle and `clean package` for Maven. Once run, Gradle will generate a WAR file in the `build/libs` directory, while Maven will generate it in the `target` directory.
+The required build-tasks are typically `clean build` for Gradle and `clean verify` for Maven. Once run, Gradle will generate a WAR file in the `build/libs` directory, while Maven will generate it in the `target` directory.
 
 **Note:** When building a WAR file for deployment to Liberty it is good practice to exclude Tomcat from the final runtime artifact. We demonstrate this in the pom.xml with the *provided* scope, and in build.gradle with the *providedRuntime()* dependency.
 
@@ -96,47 +115,56 @@ Run the following in a local command prompt:
 On Linux or Mac:
 
 ```shell
-./mvnw clean package
+./mvnw clean verify
 ```
 
 On Windows:
 
 ```shell
-mvnw.cmd clean package
+mvnw.cmd clean verify
 ```
 
 This creates a WAR file inside the `target` directory.
 
-## Deploying
+## Deploying to a CICS Liberty JVM server
 
-Ensure you have the `pages-3.1` feature (which itself contains `servlet`) configured in `server.xml`:
+### Prerequisites
 
-Either:    
-1. Create a CICS bundle project and copy the WAR file into it.
+Ensure you have the following features defined in your Liberty `server.xml`:
+- `<feature>pages-3.1</feature>` (which itself contains `servlet`)
+- `<feature>cicsts:security-1.0</feature>` if CICS security is enabled
 
-2. Add a *Dynamic Web Project include* to the project to point at the local WAR file.
+---
 
-3. Deploy the CICS bundle project to CICS.
+### Method 1: CICS Explorer SDK Deployment
 
-4. Enable the JVM server and CICS bundle.
+1. Copy the built WAR from your *build/libs* or *target* directory into an Eclipse CICS Bundle Project
+2. Create a new WAR bundlepart that references the WAR file
+3. Deploy the CICS Bundle Project from CICS Explorer using the **Export Bundle Project to z/OS UNIX File System** wizard
 
-Or:
-1. Manually upload the WAR file to zFS and add an `<application>` configuration element to server.xml:
+---
+
+### Method 2: Direct Liberty Application Deployment
+
+1. Manually upload the WAR file to zFS
+2. Add an `<application>` element to the Liberty server.xml to define the web application with access to all authenticated users:
 
 ```xml
-   <application id="cics-java-liberty-springboot-transactions-0.1.0"  
-     location="${server.config.dir}/springapps/cics-java-liberty-springboot-transactions-0.1.0.war"  
-     name="cics-java-liberty-springboot-transactions-0.1.0" type="war">
-     <application-bnd>
+<application id="cics-java-liberty-springboot-transactions-0.1.0"
+    location="${server.config.dir}/springapps/cics-java-liberty-springboot-transactions-0.1.0.war"
+    name="cics-java-liberty-springboot-transactions-0.1.0" type="war">
+    <application-bnd>
         <security-role name="cicsAllAuthenticated">
             <special-subject type="ALL_AUTHENTICATED_USERS"/>
         </security-role>
-     </application-bnd>  
-   </application>
+    </application-bnd>
+</application>
 ```
 
+---
+
     
-## Trying out the sample
+## Running the Sample
 
 1. With the application installed, the root URL for the sample application can be found in messages.log e.g. `http://myzos.mycompany.com:32000/cics-java-liberty-springboot-transactions-0.1.0/`.
 
@@ -153,6 +181,16 @@ Or:
 
 
 ## License
-This project is licensed under [Eclipse Public License - v 2.0](LICENSE). 
+This project is licensed under [Eclipse Public License - v 2.0](LICENSE).
 
+## Additional Resources
+
+- [CICS TS for z/OS Documentation](https://www.ibm.com/docs/en/cics-ts)
+- [Spring Boot Java applications for CICS, Part 3: Transactions](https://developer.ibm.com/tutorials/spring-boot-java-applications-for-cics-part-3-transactions/)
+- [IBM Java Transaction API (JTA)](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.4.0/applications/developing/java/dfhpj2_jta.html)
+- [Spring Transaction Management](https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/transaction.html)
+
+## Contributing
+
+Contributions are welcome! Please read our [contributing guidelines](https://github.com/cicsdev/.github/blob/main/CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
