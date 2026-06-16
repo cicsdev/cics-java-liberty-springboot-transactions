@@ -17,9 +17,7 @@ buildNumber.properties
 .mvn/timing.properties
 
 # Eclipse
-.classpath
-.project
-.settings/
+# Note: .project, .classpath, and .settings/ are committed for multi-module projects
 bin/
 
 # IntelliJ IDEA
