@@ -1,6 +1,6 @@
 # cics-java-liberty-springboot-transactions
 [![Build](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/actions/workflows/build.yaml/badge.svg)](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/actions/workflows/build.yaml)
-[![License](https://img.shields.io/badge/License-EPL%202.0-red.svg)](https://www.eclipse.org/legal/epl-2.0/)
+[![License](https://img.shields.io/badge/License-EPL%202.0-green.svg)](https://www.eclipse.org/legal/epl-2.0/)
 
 ## Overview
 
