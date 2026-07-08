@@ -45,7 +45,7 @@ More information about the development of this sample can be found in the blog [
 - Clone the repository using your IDEs support, such as the Eclipse Git plugin
 - **or**, download the sample as a [ZIP](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/archive/main.zip) and unzip onto the workstation
 
->*Tip: Eclipse Git provides an 'Import existing Projects' check-box when cloning a repository. This imports the root project; run a Gradle or Maven refresh afterwards to discover the `-app` and `-cicsbundle` modules.*
+>*Tip: Eclipse Git provides an 'Import existing Projects' check-box when cloning a repository. This imports the root project; run a Gradle or Maven refresh afterwards to discover the `-app` and `-cicsbundle` modules. The `-cicsbundle-eclipse` project must be imported separately — see [CICS Explorer SDK Deployment](#cics-explorer-sdk-deployment).*
 
 ### Check dependencies
  
