@@ -129,31 +129,74 @@ This creates a WAR file inside the `cics-java-liberty-springboot-transactions-ap
 
 ## Deploying to a CICS Liberty JVM server
 
-### Prerequisites
-
 Ensure you have the following features defined in your Liberty `server.xml`:
-- `<feature>pages-3.1</feature>` (which itself contains `servlet`)
-- `<feature>cicsts:security-1.0</feature>` if CICS security is enabled
+
+- `servlet-6.0` (required for Spring Boot 3.x and Jakarta EE 10)
+
+> **Note:** `cicsts:security-1.0` is auto-injected when CICS region security is active — no manual configuration required.
+
+A template `server.xml` is provided [here](./etc/config/liberty/server.xml).
+
+### CICS Bundle Plugin Deployment (Gradle/Maven)
+
+This is the **recommended** deployment method as it uses the CICS bundle generated during the build process.
+
+This method uses the cics-bundle-gradle-plugin or cics-bundle-maven-plugin to automatically generate a CICS bundle.
+
+**Configure your JVM server name:**
+
+Gradle (`cics-java-liberty-springboot-transactions-cicsbundle/build.gradle`):
+```gradle
+cics.jvmserver = 'YOUR_JVMSERVER_NAME'  // e.g., 'DFHWLP'
+```
+
+Maven (`cics-java-liberty-springboot-transactions-cicsbundle/pom.xml`):
+```xml
+<cics.jvmserver>YOUR_JVMSERVER_NAME</cics.jvmserver>  <!-- e.g., DFHWLP -->
+```
+
+**Deploy the bundle:**
+
+1. Upload the CICS bundle ZIP file to zFS:
+   - Gradle: `cics-java-liberty-springboot-transactions-cicsbundle/build/distributions/cics-java-liberty-springboot-transactions-cicsbundle-1.0.0.zip`
+   - Maven: `cics-java-liberty-springboot-transactions-cicsbundle/target/cics-java-liberty-springboot-transactions-cicsbundle-1.0.0.zip`
+
+2. Unzip the bundle on zFS
+
+3. Create a CICS BUNDLE resource definition:
+   ```
+   CEDA DEFINE BUNDLE(TXNS) GROUP(MYGROUP) BUNDLEDIR(/path/to/bundle)
+   ```
+
+4. Install the bundle:
+   ```
+   CEDA INSTALL BUNDLE(TXNS) GROUP(MYGROUP)
+   ```
+
+**Alternative:** Use the CICS deployment API via CMCI to deploy the bundle remotely.
 
 ---
 
-### Method 1: CICS Explorer SDK Deployment
+### CICS Explorer SDK Deployment
 
-1. Copy the built WAR from your *build/libs* or *target* directory into an Eclipse CICS Bundle Project
-2. Create a new WAR bundlepart that references the WAR file
-3. Deploy the CICS Bundle Project from CICS Explorer using the **Export Bundle Project to z/OS UNIX File System** wizard
+This repository includes a pre-configured Eclipse CICS bundle project `cics-java-liberty-springboot-transactions-cicsbundle-eclipse` that can be used directly with CICS Explorer SDK.
+
+1. In the Eclipse **Project Explorer**, right-click the `cics-java-liberty-springboot-transactions-cicsbundle-eclipse` folder → **Import as Project**
+2. Right-click the imported project → **Export Bundle Project to z/OS UNIX File System** and follow the wizard
+
+> **Note**: The bundle project is pre-configured so that the Eclipse WTP export automatically packages the application WAR with all dependencies. This relies on the `-app` project being open in the same Eclipse workspace.
 
 ---
 
-### Method 2: Direct Liberty Application Deployment
+### Direct Liberty Application Deployment
 
 1. Manually upload the WAR file to zFS
-2. Add an `<application>` element to the Liberty server.xml to define the web application with access to all authenticated users:
+2. Add an `<application>` element to the Liberty server.xml to define the web application with access to all authenticated users. For example:
 
 ```xml
-<application id="cics-java-liberty-springboot-transactions-0.1.0"
-    location="${server.config.dir}/springapps/cics-java-liberty-springboot-transactions-0.1.0.war"
-    name="cics-java-liberty-springboot-transactions-0.1.0" type="war">
+<application id="cics-java-liberty-springboot-transactions"
+    location="${server.config.dir}/springapps/cics-java-liberty-springboot-transactions.war"
+    name="cics-java-liberty-springboot-transactions" type="war">
     <application-bnd>
         <security-role name="cicsAllAuthenticated">
             <special-subject type="ALL_AUTHENTICATED_USERS"/>
@@ -164,34 +207,42 @@ Ensure you have the following features defined in your Liberty `server.xml`:
 
 ---
 
-    
 ## Running the Sample
 
-1. With the application installed, the root URL for the sample application can be found in messages.log e.g. `http://myzos.mycompany.com:32000/cics-java-liberty-springboot-transactions-0.1.0/`.
+1. Ensure the web application started successfully in Liberty by checking for msg `CWWKT0016I` in the Liberty messages.log:
+   ```
+   CWWKT0016I: Web application available (default_host): http://myzos.mycompany.com:httpPort/cics-java-liberty-springboot-transactions
+   ```
 
-2. Visit the URL from the browser to review the 'Usage' guide.
-   Note: The trailing "/" is required to display the Usage Guide.
+2. Visit the root URL from a browser to review the usage guide:
+   ```
+   http://myzos.mycompany.com:httpPort/cics-java-liberty-springboot-transactions/
+   ```
+   Note: The trailing `/` is required to display the Usage Guide.
 
 3. To demonstrate the `@Transactional` container managed transaction, drive the `/transactionalCommit` end-point. You should see *hello CICS from transactionalCommit()* at the browser and a corresponding entry in the TSQ 'EXAMPLE'. You can browse the contents of the TSQ using the CEBR transaction in CICS.
 
 4. Now try the same TSQ write operation `/transactionalRollback`. This time the application is designed to write to the TSQ then throw an exception causing Spring Boot to rollback the transaction. If you have not installed a TSMODEL resource to make the EXAMPLE TSQ recoverable, you will see a second entry in the TSQ! If you have already made the TSQ recoverable then there should be no such entry due to rollback of the CICS UOW.
 
-5. Next, try the *Spring Transaction Template* and *Java EE User Transaction* demos at `/STcommit` and `/JEEcommit` respectively. Along with their rollback counterparts `/STrollback` and `/JEErollback`. 
+5. Next, try the *Spring Transaction Template* and *Java EE User Transaction* demos at `/STcommit` and `/JEEcommit` respectively. Along with their rollback counterparts `/STrollback` and `/JEErollback`.
 
 6. For confirmation of the behaviour, you can run the sample before your TSQ is designated as recoverable (through a TSMODEL) and again afterwards. Observe how the entries to the TSQ are either committed, or written - then rolled back.
 
-
 ## License
+
 This project is licensed under [Eclipse Public License - v 2.0](LICENSE).
 
 ## Additional Resources
 
-- [CICS TS for z/OS Documentation](https://www.ibm.com/docs/en/cics-ts)
+- [CICS TS Documentation](https://www.ibm.com/docs/en/cics-ts)
+- [WebSphere Liberty Documentation](https://www.ibm.com/docs/en/was-liberty)
+- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
 - [Spring Boot Java applications for CICS, Part 3: Transactions](https://developer.ibm.com/tutorials/spring-boot-java-applications-for-cics-part-3-transactions/)
-- [IBM Java Transaction API (JTA)](https://www.ibm.com/support/knowledgecenter/en/SSGMCP_5.4.0/applications/developing/java/dfhpj2_jta.html)
-- [Spring Transaction Management](https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/transaction.html)
+- [Spring Transaction Management](https://docs.spring.io/spring-framework/reference/data-access/transaction.html)
 
 ## Contributing
 
-Contributions are welcome! Please read our [contributing guidelines](https://github.com/cicsdev/.github/blob/main/CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+This is a sample project maintained by IBM CICS development. For issues or questions:
+- Open an issue on GitHub
+- Contact IBM Support for CICS-related questions
 
