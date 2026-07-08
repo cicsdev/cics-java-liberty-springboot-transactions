@@ -81,15 +81,15 @@ On the command line, you simply swap the Gradle or Maven command for the wrapper
   
 For an IDE, taking Eclipse as an example, the plug-ins for Gradle *buildship* and Maven *m2e* will integrate with the "Run As..." capability, allowing you to specify whether you want to build the project with a Wrapper, or a specific version of your chosen build tool.
 
-The required build-tasks are typically `clean build` for Gradle and `clean verify` for Maven. Once run, Gradle will generate a WAR file in the `build/libs` directory, while Maven will generate it in the `target` directory.
+The required build-tasks are `clean build` for Gradle and `clean verify` for Maven. Once run, Gradle will generate a WAR file in the `cics-java-liberty-springboot-transactions-app/build/libs` directory, while Maven will generate it in the `cics-java-liberty-springboot-transactions-app/target` directory.
 
 **Note:** When building a WAR file for deployment to Liberty it is good practice to exclude Tomcat from the final runtime artifact. We demonstrate this in the pom.xml with the *provided* scope, and in build.gradle with the *providedRuntime()* dependency.
 
 **Note:** If you import the project to your IDE, you might experience local project compile errors. To resolve these errors you should run a tooling refresh on that project. For example, in Eclipse: right-click on "Project", select "Gradle -> Refresh Gradle Project", **or** right-click on "Project", select "Maven -> Update Project...".
 
->Tip: *In Eclipse, Gradle (buildship) is able to fully refresh and resolve the local classpath even if the project was previously updated by Maven. However, Maven (m2e) does not currently reciprocate that capability. If you previously refreshed the project with Gradle, you'll need to manually remove the 'Project Dependencies' entry on the Java build-path of your Project Properties to avoid duplication errors when performing a Maven Project Update.*  
+>Tip: *In Eclipse, Gradle (buildship) is able to fully refresh and resolve the local classpath even if the project was previously updated by Maven. However, Maven (m2e) does not currently reciprocate that capability. If you previously refreshed the project with Gradle, you'll need to manually remove the 'Project Dependencies' entry on the Java build-path of your Project Properties to avoid duplication errors when performing a Maven Project Update.*
 
-#### Gradle Wrapper (command line)
+### Gradle Wrapper (command line)
 
 Run the following in a local command prompt:
 
@@ -98,16 +98,16 @@ On Linux or Mac:
 ```shell
 ./gradlew clean build
 ```
+
 On Windows:
 
 ```shell
 gradlew.bat clean build
 ```
 
-This creates a WAR file inside the `build/libs` directory.
+This creates a WAR file inside the `cics-java-liberty-springboot-transactions-app/build/libs` directory.
 
-#### Maven Wrapper (command line)
-
+### Maven Wrapper (command line)
 
 Run the following in a local command prompt:
 
@@ -123,7 +123,9 @@ On Windows:
 mvnw.cmd clean verify
 ```
 
-This creates a WAR file inside the `target` directory.
+This creates a WAR file inside the `cics-java-liberty-springboot-transactions-app/target` directory.
+
+> **Note:** The `-cicsbundle-eclipse` project is a standalone Eclipse project not managed by Gradle or Maven. Import it separately by right-clicking the `cics-java-liberty-springboot-transactions-cicsbundle-eclipse` folder in the **Project Explorer** → **Import as Project**.
 
 ## Deploying to a CICS Liberty JVM server
 
