@@ -6,8 +6,7 @@
 
 This sample project demonstrates how a Spring Boot application deployed to a Liberty JVM server can use different techniques to integrate with CICS transactions. The application uses a web browser front end and makes use of the Java™ Transaction API (JTA). The three techniques demonstrated are: Java EE User Transaction, Spring's `@Transactional` annotation, and the Spring Transaction Template.
 
-## Key Features
-
+**Key Features:**
 - **JTA Integration**: Demonstrates Java Transaction API usage in CICS
 - **Multiple Transaction Techniques**: Shows three different approaches to transaction management
 - **Spring Boot Integration**: Uses Spring's `@Transactional` annotation and Transaction Template
@@ -16,26 +15,26 @@ This sample project demonstrates how a Spring Boot application deployed to a Lib
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [Prerequisites](#prerequisites)
-- [Reference](#reference)
-- [Downloading](#downloading)
-- [Building the Sample](#building-the-sample)
-- [Deploying to a CICS Liberty JVM server](#deploying-to-a-cics-liberty-jvm-server)
-- [Running the Sample](#running-the-sample)
-- [License](#license)
-- [Additional Resources](#additional-resources)
-- [Contributing](#contributing)
+1. [Overview](#overview)
+2. [Prerequisites](#prerequisites)
+3. [Reference](#reference)
+4. [Downloading](#downloading)
+5. [Check Dependencies](#check-dependencies)
+6. [Building the Sample](#building-the-sample)
+7. [Deploying to a CICS Liberty JVM server](#deploying-to-a-cics-liberty-jvm-server)
+8. [Running the Sample](#running-the-sample)
+9. [License](#license)
+10. [Additional Resources](#additional-resources)
+11. [Contributing](#contributing)
 
 ## Prerequisites
 
-- CICS TS V6.1 or later
+- CICS TS V6.1 or later (required for Spring Boot 3.x and Jakarta EE 10 support)
 - A configured Liberty JVM server in CICS
-- Requires Java 17 or later. on the workstation
+- Java SE 17 or later on the workstation
 - An Eclipse development environment on the workstation (optional)
 - Either Gradle or Apache Maven on the workstation (optional if using Wrappers)
-- A CICS TSMODEL resource with the attribute `Recovery(ON)` for the TSQ called `EXAMPLE`.
+- A CICS TSMODEL resource with the attribute `Recovery(ON)` for the TSQ called `EXAMPLE`
 
 ## Reference
 
@@ -46,7 +45,7 @@ More information about the development of this sample can be found in the blog [
 - Clone the repository using your IDEs support, such as the Eclipse Git plugin
 - **or**, download the sample as a [ZIP](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/archive/main.zip) and unzip onto the workstation
 
->*Tip: Eclipse Git provides an 'Import existing Projects' check-box when cloning a repository.*
+>*Tip: Eclipse Git provides an 'Import existing Projects' check-box when cloning a repository. This imports the root project; run a Gradle or Maven refresh afterwards to discover the `-app` and `-cicsbundle` modules.*
 
 ### Check dependencies
  
