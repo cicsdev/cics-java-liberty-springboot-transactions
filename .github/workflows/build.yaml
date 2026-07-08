@@ -15,6 +15,9 @@ jobs:
   check-copyright:
     runs-on: ubuntu-latest
     name: Check Copyright
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -59,7 +62,7 @@ jobs:
         with:
           java-version: ${{ matrix.jdk }}
           distribution: "semeru"
-      - name: Build with Maven
+      - name: Build with Maven Wrapper
         run: ./mvnw --batch-mode --update-snapshots --file pom.xml -Djava.version=${{ matrix.jdk }} verify
 
   build-gradle:
@@ -84,7 +87,7 @@ jobs:
       run: gradle clean build -Pjava_version=${{ matrix.jdk }}
       
   build-gradlew:
-    name: Build Gradle wrapper
+    name: Build Gradle Wrapper
     
     runs-on: ubuntu-latest
     strategy:

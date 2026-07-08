@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="Liberty server for CICS Spring Boot transactions sample">
+
+    <featureManager>
+        <!-- Required for Spring Boot 3.x and Jakarta EE 10.
+             In CICS integrated Liberty mode, cicsts:core-1.0 is auto-injected and
+             provides transaction-2.0 and jndi-1.0 — no additional features required
+             for JTA UserTransaction or Spring @Transactional support. -->
+        <feature>servlet-6.0</feature>
+    </featureManager>
+
+</server>
