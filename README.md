@@ -257,7 +257,5 @@ This project is licensed under [Eclipse Public License - v 2.0](LICENSE).
 
 ## Contributing
 
-This is a sample project maintained by IBM CICS development. For issues or questions:
-- Open an issue on GitHub
-- Contact IBM Support for CICS-related questions
+This sample is maintained by IBM CICS development. We welcome bug reports and feature requests via GitHub Issues. Contributions are welcome and reviewed on a case-by-case basis — please read the [contributing guidelines](https://github.com/cicsdev/.github/blob/main/CONTRIBUTING.md) before opening a pull request. For CICS product questions, contact IBM Support.
 
