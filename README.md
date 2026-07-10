@@ -110,6 +110,8 @@ gradlew.bat clean build
 
 This creates a WAR file inside the `cics-java-liberty-springboot-transactions-app/build/libs` directory.
 
+> **Note:** In Eclipse, the `build` directory may be hidden by default. To view it: **Package Explorer → ⋮ → Filters and Customization → uncheck "Gradle build folder"**. For Maven, the `target` directory is visible by default.
+
 ### Maven Wrapper (command line)
 
 Run the following in a local command prompt:
