@@ -43,16 +43,22 @@ More information about the development of this sample can be found in the blog [
 
 ## Downloading
 
-- Clone the repository using your IDEs support, such as the Eclipse Git plugin
-- **or**, download the sample as a [ZIP](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/archive/main.zip) and unzip onto the workstation
+**If using Eclipse:** the simplest approach is to clone the repository using the Eclipse Git plugin (EGit) perspective.
 
-**Importing into Eclipse:**
+**If using the command line:**
+```shell
+git clone https://github.com/cicsdev/cics-java-liberty-springboot-transactions
+```
+Alternatively, download the sample as a [ZIP](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/archive/main.zip) and unzip onto the workstation.
+
+**If importing into Eclipse:**
 1. In the **Git Repositories** view, right-click the repository → **Import as Project** (imports the root project)
+   *(if you cloned from the command line, use **File → Import → Existing Projects into Workspace** instead, browse to the cloned directory, select all projects, and skip to step 6)*
 2. Switch to the **Java EE** perspective
 3. In the **Project Explorer**, right-click the `cics-java-liberty-springboot-transactions-app` folder → **Import as Project**
 4. Right-click the `cics-java-liberty-springboot-transactions-cicsbundle` folder → **Import as Project**
 5. Right-click the `cics-java-liberty-springboot-transactions-cicsbundle-eclipse` folder → **Import as Project**
-6. Right-click the root project → **Gradle → Refresh Gradle Project** or **Maven → Update Project...** to resolve dependencies
+6. **Required:** Right-click the root project → **Gradle → Refresh Gradle Project** or **Maven → Update Project...** — this resolves Spring Boot and CICS dependencies into the project classpath. Without this step, the WTP export will produce an incomplete WAR missing `WEB-INF/lib`.
 
 ### Check dependencies
  
@@ -142,8 +148,6 @@ A template `server.xml` is provided [here](./etc/config/liberty/server.xml).
 
 ### CICS Bundle Plugin Deployment (Gradle/Maven)
 
-This is the **recommended** deployment method as it uses the CICS bundle generated during the build process.
-
 This method uses the cics-bundle-gradle-plugin or cics-bundle-maven-plugin to automatically generate a CICS bundle.
 
 **Configure your JVM server name:**
@@ -186,7 +190,7 @@ This repository includes a pre-configured Eclipse CICS bundle project `cics-java
 
 1. Right-click the `cics-java-liberty-springboot-transactions-cicsbundle-eclipse` project → **Export Bundle Project to z/OS UNIX File System** and follow the wizard
 
-> **Note**: The bundle project is pre-configured so that the Eclipse WTP export automatically packages the application WAR with all dependencies. This relies on the `-app` project being open in the same Eclipse workspace. If you have not yet imported the project, follow step 5 of the [Importing into Eclipse](#downloading) instructions first.
+> **Note**: The bundle project is pre-configured so that the Eclipse WTP export automatically packages the application WAR with all dependencies. This relies on the `-app` project being open in the same Eclipse workspace. If you have not yet imported the project, follow steps 3 and 6 of the [Importing into Eclipse](#downloading) instructions first.
 
 ---
 
