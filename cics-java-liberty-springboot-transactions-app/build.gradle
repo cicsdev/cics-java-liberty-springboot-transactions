@@ -23,8 +23,9 @@ java {
 // ============================================================================
 // WAR Configuration
 // ============================================================================
-war {
-    archiveFileName = "cics-java-liberty-springboot-transactions-app-${version}.war"
+war
+{
+    archiveFileName = 'cics-java-liberty-springboot-transactions.war'
 }
 
 // Two versions of the WAR would be built, one for embedding into servers like Liberty (plain)
