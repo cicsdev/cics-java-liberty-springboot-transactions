@@ -100,4 +100,3 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew clean build -Pjava_version=${{ matrix.jdk }}
 
-
