@@ -73,6 +73,7 @@
   <!-- Package as an executable war (default jar) -->
   <packaging>war</packaging>
   <build>
+    <finalName>cics-java-liberty-springboot-transactions</finalName>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
