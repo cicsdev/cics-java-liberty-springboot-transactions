@@ -1,12 +1,13 @@
 name: Build
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
-permissions:
-  contents: read
 
 jobs:
   check-copyright:
@@ -99,4 +100,3 @@ jobs:
         distribution: 'semeru'
     - name: Build with Gradle Wrapper
       run: ./gradlew clean build -Pjava_version=${{ matrix.jdk }}
-
