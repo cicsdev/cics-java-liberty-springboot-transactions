@@ -1,6 +1,9 @@
 # cics-java-liberty-springboot-transactions
-[![Build](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/actions/workflows/build.yaml/badge.svg)](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/actions/workflows/build.yaml)
+[![Build](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/actions/workflows/build.yaml/badge.svg?branch=springboot%2Fv3)](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/actions/workflows/build.yaml)
 [![License](https://img.shields.io/badge/License-EPL%202.0-green.svg)](https://www.eclipse.org/legal/epl-2.0/)
+
+> **Version note:** This branch targets Spring Boot 3.x (Jakarta EE 10, Java 17+).
+> For Spring Boot 4.x see the [springboot/v4](../../tree/springboot/v4) branch.
 
 ## Overview
 
@@ -47,9 +50,9 @@ More information about the development of this sample can be found in the blog [
 
 **If using the command line:**
 ```shell
-git clone https://github.com/cicsdev/cics-java-liberty-springboot-transactions
+git clone -b springboot/v3 https://github.com/cicsdev/cics-java-liberty-springboot-transactions
 ```
-Alternatively, download the sample as a [ZIP](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/archive/main.zip) and unzip onto the workstation.
+Alternatively, download the sample as a [ZIP](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/archive/springboot/v3.zip) and unzip onto the workstation.
 
 **If importing into Eclipse:**
 1. In the **Git Repositories** view, right-click the repository → **Import as Project** (imports the root project)
