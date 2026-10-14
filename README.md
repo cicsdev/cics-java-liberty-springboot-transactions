@@ -1,9 +1,19 @@
 # cics-java-liberty-springboot-transactions
-[![Build](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/actions/workflows/build.yaml/badge.svg?branch=springboot%2Fv3)](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/actions/workflows/build.yaml)
+[![Build](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/actions/workflows/build.yaml/badge.svg?branch=springboot%2Fv4)](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/actions/workflows/build.yaml)
 [![License](https://img.shields.io/badge/License-EPL%202.0-green.svg)](https://www.eclipse.org/legal/epl-2.0/)
 
-> **Version note:** This branch targets Spring Boot 3.x (Jakarta EE 10, Java 17+).
-> For Spring Boot 4.x see the [springboot/v4](../../tree/springboot/v4) branch.
+> **Version note:** This branch targets Spring Boot 4.x (Jakarta EE 11, Java 21+).
+> For Spring Boot 3.x see the [springboot/v3](../../tree/springboot/v3) branch.
+
+> **Pre-publish actions required:**
+> 1. **CICS Explorer SDK classpath entry** in
+>    `cics-java-liberty-springboot-transactions-app/.classpath` references
+>    `JE.JEE_V11_R0` (Jakarta EE 11). This token is not yet present in CICS Explorer
+>    SDK. Once the SDK ships Jakarta EE 11 support, verify the entry resolves correctly.
+> 2. **`web.xml` descriptor version** is temporarily set to `6.0` (Servlet 6.0 XSD)
+>    because WTP does not yet recognise `version="6.1"` and throws an error on project
+>    refresh. Once WTP supports Servlet 6.1, update `web.xml` to use
+>    `web-app_6_1.xsd` and `version="6.1"`, and remove this notice.
 
 ## Overview
 
@@ -33,9 +43,9 @@ This sample project demonstrates how a Spring Boot application deployed to a Lib
 
 ## Prerequisites
 
-- CICS TS V6.1 or later (required for Spring Boot 3.x and Jakarta EE 10 support)
+- CICS TS V6.1 or later (required for Spring Boot 4.x and Jakarta EE 11 support)
 - A configured Liberty JVM server in CICS
-- Java SE 17 or later on the workstation
+- Java SE 21 or later on the workstation
 - An Eclipse development environment on the workstation (optional)
 - Either Gradle or Apache Maven on the workstation (optional if using Wrappers)
 - A CICS TSMODEL resource with the attribute `Recovery(ON)` for the TSQ called `EXAMPLE`
@@ -50,9 +60,9 @@ More information about the development of this sample can be found in the blog [
 
 **If using the command line:**
 ```shell
-git clone -b springboot/v3 https://github.com/cicsdev/cics-java-liberty-springboot-transactions
+git clone -b springboot/v4 https://github.com/cicsdev/cics-java-liberty-springboot-transactions
 ```
-Alternatively, download the sample as a [ZIP](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/archive/springboot/v3.zip) and unzip onto the workstation.
+Alternatively, download the sample as a [ZIP](https://github.com/cicsdev/cics-java-liberty-springboot-transactions/archive/springboot/v4.zip) and unzip onto the workstation.
 
 **If importing into Eclipse:**
 1. In the **Git Repositories** view, right-click the repository → **Import as Project** (imports the root project)
@@ -99,7 +109,7 @@ For an IDE, taking Eclipse as an example, the plug-ins for Gradle *buildship* an
 
 The required build-tasks are `clean build` for Gradle and `clean verify` for Maven. Once run, Gradle will generate a WAR file in the `cics-java-liberty-springboot-transactions-app/build/libs` directory, while Maven will generate it in the `cics-java-liberty-springboot-transactions-app/target` directory.
 
-**Note:** When building a WAR file for deployment to Liberty it is good practice to exclude Tomcat from the final runtime artifact. We demonstrate this in the pom.xml with the *provided* scope, and in build.gradle with the *providedRuntime()* dependency.
+**Note:** When building a WAR file for deployment to Liberty it is good practice to exclude the Tomcat embedded container from the final runtime artifact, as Liberty provides the servlet container. In Spring Boot 4.x, `spring-boot-starter-tomcat` includes `spring-boot-starter` as a compile dependency, which would incorrectly strip core Spring libraries from `WEB-INF/lib` if excluded wholesale. Instead, we exclude only `spring-boot-starter-tomcat-runtime` (the Tomcat embed jars) using the *provided* scope in pom.xml and *providedRuntime()* in build.gradle.
 
 ### Gradle Wrapper (command line)
 
@@ -143,7 +153,7 @@ This creates a WAR file inside the `cics-java-liberty-springboot-transactions-ap
 
 Ensure you have the following features defined in your Liberty `server.xml`:
 
-- `servlet-6.0` (required for Spring Boot 3.x and Jakarta EE 10)
+- `servlet-6.1` (required for Spring Boot 4.x and Jakarta EE 11)
 
 > **Note:** `cicsts:security-1.0` is auto-injected when CICS region security is active — no manual configuration required.
 
@@ -244,11 +254,11 @@ This repository includes a pre-configured Eclipse CICS bundle project `cics-java
 - Define the TSMODEL and reinstall it, then retry the rollback endpoints.
 
 **Application fails to start — `CWWKZ0013E` or `SRVE0190E`**
-- Verify `servlet-6.0` is enabled in your Liberty `server.xml`.
-- Confirm CICS TS V6.1 or later is installed — earlier releases do not support Jakarta EE 10.
+- Verify `servlet-6.1` is enabled in your Liberty `server.xml`.
+- Confirm CICS TS version supports Spring Boot 4.x (V6.1+).
 
 **Spring Boot context fails to initialise — `ClassNotFoundException` for `jakarta.*`**
-- This sample uses `jakarta.*` namespace (Spring Boot 3.x / Jakarta EE 10). Ensure you are not using a CICS TS release older than V6.1 which uses `javax.*`.
+- This sample uses `jakarta.*` namespace (Spring Boot 4.x / Jakarta EE 11). Ensure you are not using a CICS TS release older than V6.1 which uses `javax.*`.
 
 ## License
 
