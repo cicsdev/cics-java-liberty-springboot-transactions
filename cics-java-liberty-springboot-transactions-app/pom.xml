@@ -57,10 +57,10 @@
       <scope>provided</scope>
     </dependency>
 	  
-    <!-- Spring-transactions -->
+    <!-- Spring Boot Transaction support (includes spring-tx and transaction auto-configuration in Spring Boot 4) -->
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-tx</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-transaction</artifactId>
     </dependency>
 				
     <!-- Compile against, but don't include javax.transaction API -->
