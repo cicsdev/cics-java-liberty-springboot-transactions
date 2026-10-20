@@ -38,9 +38,24 @@ public class TransactionController
 	{
 		String bootVersion = SpringBootVersion.getVersion();
 		String versionDisplay = (bootVersion != null) ? bootVersion : "unknown";
+		
+		
+		String cicsVersion = System.getProperty("com.ibm.cics.jvmserver.cics.product.version");
+		if (cicsVersion == null || cicsVersion.isEmpty())
+		{
+			try
+			{
+				cicsVersion = com.ibm.cics.server.API.getCICSServerApiVersion().toString();
+			}
+			catch (Throwable t)
+			{
+				cicsVersion = "unknown";
+			}
+		}
 
 		return "<h1>Spring Boot Transaction REST sample</h1>"
 				+ "<p><b>Spring Boot version:</b> " + versionDisplay + "</p>"
+				+ "<p><b>CICS version:</b> " + cicsVersion + "</p>"
 				+ "<h3>Usage:</h3>"
 				+ "<b>/transactionalCommit</b> - Demo Spring Transactional annotation commit <br>"
 				+ "<b>/transactionalRollback</b> - Demo Spring Transactional annotation rollback <br>"
