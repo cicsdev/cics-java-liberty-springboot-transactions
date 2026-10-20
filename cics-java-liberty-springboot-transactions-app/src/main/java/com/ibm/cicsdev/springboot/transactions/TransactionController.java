@@ -57,12 +57,12 @@ public class TransactionController
 				+ "<p><b>Spring Boot version:</b> " + versionDisplay + "</p>"
 				+ "<p><b>CICS version:</b> " + cicsVersion + "</p>"
 				+ "<h3>Usage:</h3>"
-				+ "<b>/transactionalCommit</b> - Demo Spring Transactional annotation commit <br>"
-				+ "<b>/transactionalRollback</b> - Demo Spring Transactional annotation rollback <br>"
-				+ "<b>/STcommit</b> - Demo Spring Template commit <br>"
-				+ "<b>/STrollback</b> - Demo Spring Template rollback <br>"
-				+ "<b>/JEEcommit</b> - Demo Java EE User Transaction commit <br>"
-				+ "<b>/JEErollback</b> - Demo Java EE User Transaction rollback";
+				+ "<a href=\"transactionalCommit\"><b>/transactionalCommit</b></a> - Demo Spring Transactional annotation commit <br>"
+				+ "<a href=\"transactionalRollback\"><b>/transactionalRollback</b></a> - Demo Spring Transactional annotation rollback <br>"
+				+ "<a href=\"STcommit\"><b>/STcommit</b></a> - Demo Spring Template commit <br>"
+				+ "<a href=\"STrollback\"><b>/STrollback</b></a> - Demo Spring Template rollback <br>"
+				+ "<a href=\"JEEcommit\"><b>/JEEcommit</b></a> - Demo Java EE User Transaction commit <br>"
+				+ "<a href=\"JEErollback\"><b>/JEErollback</b></a> - Demo Java EE User Transaction rollback";
 	}
 	
  	
