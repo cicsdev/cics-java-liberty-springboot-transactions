@@ -11,6 +11,7 @@
 package com.ibm.cicsdev.springboot.transactions;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringBootVersion;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-public class TransactionController 
+public class TransactionController
 {
 	// Autowire in the three main demo objects of this Project
 	@Autowired SpringTransactional transactional;
@@ -33,14 +34,18 @@ public class TransactionController
 	 * @return usage message
 	 */
 	@GetMapping("/")
-	public String index() 
-	{				
+	public String index()
+	{
+		String bootVersion = SpringBootVersion.getVersion();
+		String versionDisplay = (bootVersion != null) ? bootVersion : "unknown";
+
 		return "<h1>Spring Boot Transaction REST sample</h1>"
+				+ "<p><b>Spring Boot version:</b> " + versionDisplay + "</p>"
 				+ "<h3>Usage:</h3>"
 				+ "<b>/transactionalCommit</b> - Demo Spring Transactional annotation commit <br>"
 				+ "<b>/transactionalRollback</b> - Demo Spring Transactional annotation rollback <br>"
 				+ "<b>/STcommit</b> - Demo Spring Template commit <br>"
-				+ "<b>/STrollback</b> - Demo Spring Template rollback <br>"				
+				+ "<b>/STrollback</b> - Demo Spring Template rollback <br>"
 				+ "<b>/JEEcommit</b> - Demo Java EE User Transaction commit <br>"
 				+ "<b>/JEErollback</b> - Demo Java EE User Transaction rollback";
 	}
