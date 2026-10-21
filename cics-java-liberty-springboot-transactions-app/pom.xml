@@ -63,7 +63,7 @@
       <artifactId>spring-boot-transaction</artifactId>
     </dependency>
 				
-    <!-- Compile against, but don't include javax.transaction API -->
+    <!-- Compile against, but don't include jakarta.transaction API -->
     <dependency>
       <groupId>jakarta.transaction</groupId>
       <artifactId>jakarta.transaction-api</artifactId>
