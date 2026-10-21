@@ -54,6 +54,7 @@ public class TransactionController
 		}
 
 		return "<h1>Spring Boot Transaction REST sample</h1>"
+				+ "<p><i>Note: A TSMODEL must be defined and installed in the CICS region for the Rollback function to work correctly.</i></p>"
 				+ "<p><b>Spring Boot version:</b> " + versionDisplay + "</p>"
 				+ "<p><b>CICS version:</b> " + cicsVersion + "</p>"
 				+ "<h3>Usage:</h3>"
